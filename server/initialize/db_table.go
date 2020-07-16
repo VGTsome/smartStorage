@@ -23,6 +23,11 @@ func DBTables() {
 		model.ExaCustomer{},
 		model.SysOperationRecord{},
 		model.CabinetProduct{},
+		model.SmartStorageCabinet{},
+		model.SmartStorageDoor{},
+		model.SmartStorageOrder{},
+		model.SmartStorageMonitor{},
+		model.SmartStorageProduct{},
 	)
 	global.GVA_LOG.Debug("register table success")
 }
