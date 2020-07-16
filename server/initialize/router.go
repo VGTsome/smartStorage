@@ -40,7 +40,12 @@ func Routers() *gin.Engine {
 	router.InitSysDictionaryDetailRouter(ApiGroup)   // 字典详情管理
 	router.InitSysDictionaryRouter(ApiGroup)         // 字典管理
 	router.InitSysOperationRecordRouter(ApiGroup)    // 操作记录
-	router.InitCabinetProductRouter(ApiGroup)        //货柜货品表
+	router.InitCabinetProductRouter(ApiGroup)        //产品货柜表表
+	router.InitSmartStorageCabinetRouter(ApiGroup)   //货品表
+	router.InitSmartStorageProductRouter(ApiGroup)   //产品表
+	router.InitSmartStorageDoorRouter(ApiGroup)      //门禁表
+	router.InitSmartStorageMonitorRouter(ApiGroup)   //摄像头表
+	router.InitSmartStorageOrderRouter(ApiGroup)     //订单表
 	global.GVA_LOG.Info("router register success")
 	return Router
 }
