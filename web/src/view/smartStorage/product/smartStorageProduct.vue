@@ -91,7 +91,7 @@
       </el-form-item>
       <el-form-item label-width="0" prop="productImg" required>
         <el-upload ref="productImg" :file-list="productImgfileList" :action="productImgAction"
-          :before-upload="productImgBeforeUpload" list-type="picture">
+          :before-upload="productImgBeforeUpload" list-type="picture" >
           <el-button size="small" type="primary" icon="el-icon-upload">点击上传</el-button>
         </el-upload>
       </el-form-item>
@@ -118,9 +118,11 @@ import {
 } from "@/api/smartStorageProduct";  //  此处请自行替换地址
 import { formatTimeToStr } from "@/utils/data";
 import infoList from "@/components/mixins/infoList";
+  const path = process.env.VUE_APP_BASE_API;
 
 export default {
   name: "SmartStorageProduct",
+
   mixins: [infoList],
   data() {
     return {
@@ -156,7 +158,8 @@ export default {
         }],
         productNumber: [],
       },
-      productImgAction: '/fileUploadAndDownload/breakpointContinue',
+      
+      productImgAction: path+'/fileUploadAndDownload/upload',
       productImgfileList: [],
     };
   },
