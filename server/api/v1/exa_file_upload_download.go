@@ -8,8 +8,9 @@ import (
 	resp "gin-vue-admin/model/response"
 	"gin-vue-admin/service"
 	"gin-vue-admin/utils"
-	"github.com/gin-gonic/gin"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 // @Tags ExaFileUploadAndDownload
@@ -27,7 +28,9 @@ func UploadFile(c *gin.Context) {
 		response.FailWithMessage(fmt.Sprintf("上传文件失败，%v", err), c)
 	} else {
 		// 文件上传后拿到文件路径
-		err, filePath, key := utils.Upload(header)
+
+		err, filePath, key := utils.UploadLocal(header, c)
+
 		if err != nil {
 			response.FailWithMessage(fmt.Sprintf("接收返回值失败，%v", err), c)
 		} else {

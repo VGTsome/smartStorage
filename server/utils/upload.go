@@ -4,11 +4,26 @@ import (
 	"context"
 	"fmt"
 	"gin-vue-admin/global"
-	"github.com/qiniu/api.v7/v7/auth/qbox"
-	"github.com/qiniu/api.v7/v7/storage"
 	"mime/multipart"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/qiniu/api.v7/v7/auth/qbox"
+	"github.com/qiniu/api.v7/v7/storage"
 )
+
+func UploadLocal(file *multipart.FileHeader, c *gin.Context) (err error, path string, key string) {
+	filePath := "fileDir/"
+	_, e := file.Open()
+	if e != nil {
+		fmt.Println(e)
+		return e, "", ""
+	}
+	fileKey := fmt.Sprintf("%d%s", time.Now().Unix(), file.Filename) // 文件名格式 自己可以改 建议保证唯一性
+	err = c.SaveUploadedFile(file, filePath+fileKey)
+	return err, filePath, fileKey
+
+}
 
 // 接收两个参数 一个文件流 一个 bucket 你的七牛云标准空间的名字
 func Upload(file *multipart.FileHeader) (err error, path string, key string) {
