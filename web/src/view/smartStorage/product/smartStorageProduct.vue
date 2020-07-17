@@ -90,7 +90,7 @@
           :autosize="{minRows: 4, maxRows: 4}" :style="{width: '100%'}"></el-input>
       </el-form-item>
       <el-form-item label-width="0" prop="productImg" required>
-        <el-upload ref="productImg" :file-list="productImgfileList" :action="productImgAction"
+        <el-upload ref="productImg" :file-list="productImgfileList" :action="productImgAction" on-success="updatefilelist"
           :before-upload="productImgBeforeUpload" list-type="picture" >
           <el-button size="small" type="primary" icon="el-icon-upload">点击上传</el-button>
         </el-upload>
