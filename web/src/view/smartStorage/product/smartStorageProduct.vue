@@ -73,7 +73,32 @@
     ></el-pagination>
 
     <el-dialog :before-close="closeDialog" :visible.sync="dialogFormVisible" title="弹窗操作">
-      此处请使用表单生成器生成form填充 表单默认绑定 formData 如手动修改过请自行修改key
+       <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="100px">
+      <el-form-item label="货品编号" prop="productId">
+        <el-input v-model="formData.productId" placeholder="请输入货品编号" clearable :style="{width: '100%'}">
+        </el-input>
+      </el-form-item>
+      <el-form-item label="货品名称" prop="productName">
+        <el-input v-model="formData.productName" placeholder="请输入货品名称" clearable :style="{width: '100%'}">
+        </el-input>
+      </el-form-item>
+      <el-form-item label="货品重量" prop="productWeight">
+        <el-input-number v-model="formData.productWeight" placeholder="货品重量"></el-input-number>
+      </el-form-item>
+      <el-form-item label="货品描述" prop="productDescription">
+        <el-input v-model="formData.productDescription" type="textarea" placeholder="请输入货品描述"
+          :autosize="{minRows: 4, maxRows: 4}" :style="{width: '100%'}"></el-input>
+      </el-form-item>
+      <el-form-item label-width="0" prop="productImg" required>
+        <el-upload ref="productImg" :file-list="productImgfileList" :action="productImgAction"
+          :before-upload="productImgBeforeUpload" list-type="picture">
+          <el-button size="small" type="primary" icon="el-icon-upload">点击上传</el-button>
+        </el-upload>
+      </el-form-item>
+      <el-form-item label="货品数量" prop="productNumber">
+        <el-input-number v-model="formData.productNumber" placeholder="货品数量"></el-input-number>
+      </el-form-item>
+    </el-form>
       <div class="dialog-footer" slot="footer">
         <el-button @click="closeDialog">取 消</el-button>
         <el-button @click="enterDialog" type="primary">确 定</el-button>
@@ -107,7 +132,32 @@ export default {
       multipleSelection: [],
       formData: {
         productId:null,productName:null,productWeight:null,productDescription:null,productImgUrl:null,productNumber:null,
-      }
+      },
+      rules: {
+        productId: [{
+          required: true,
+          message: '请输入货品编号',
+          trigger: 'blur'
+        }],
+        productName: [{
+          required: true,
+          message: '请输入货品名称',
+          trigger: 'blur'
+        }],
+        productWeight: [{
+          required: true,
+          message: '货品重量',
+          trigger: 'blur'
+        }],
+        productDescription: [{
+          required: true,
+          message: '请输入货品描述',
+          trigger: 'blur'
+        }],
+        productNumber: [],
+      },
+      productImgAction: '/fileUploadAndDownload/breakpointContinue',
+      productImgfileList: [],
     };
   },
   filters: {
@@ -160,6 +210,13 @@ export default {
         this.formData = res.data.resmartStorageProduct;
         this.dialogFormVisible = true;
       }
+    },
+    productImgBeforeUpload(file) {
+      let isRightSize = file.size / 1024 / 1024 < 5
+      if (!isRightSize) {
+        this.$message.error('文件大小超过 5MB')
+      }
+      return isRightSize
     },
     closeDialog() {
       this.dialogFormVisible = false;
