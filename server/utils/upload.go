@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"gin-vue-admin/global"
+	"gin-vue-admin/model/request"
 	"mime/multipart"
+	"path"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -12,16 +14,20 @@ import (
 	"github.com/qiniu/api.v7/v7/storage"
 )
 
-func UploadLocal(file *multipart.FileHeader, c *gin.Context) (err error, path string, key string) {
+func UploadLocal(file *multipart.FileHeader, c *gin.Context) (err error, savePath string, key string) {
+	claims, _ := c.Get("claims")
+	waitUse := claims.(*request.CustomClaims)
 	filePath := "fileDir/"
 	_, e := file.Open()
 	if e != nil {
 		fmt.Println(e)
 		return e, "", ""
 	}
-	fileKey := fmt.Sprintf("%d%s", time.Now().Unix(), file.Filename) // 文件名格式 自己可以改 建议保证唯一性
-	err = c.SaveUploadedFile(file, filePath+fileKey)
-	return err, filePath, fileKey
+	fileSuffix := path.Ext(file.Filename)
+	//fileKey := fmt.Sprintf("%d%s", time.Now().Unix(), file.Filename) // 文件名格式 自己可以改 建议保证唯一性
+	filekey := fmt.Sprintf("%d", time.Now().Unix()) + "_" + fmt.Sprintf("%d", waitUse.ID) + fileSuffix
+	err = c.SaveUploadedFile(file, filePath+filekey)
+	return err, filePath, filekey
 
 }
 

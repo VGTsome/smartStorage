@@ -7,6 +7,7 @@ import (
 	"gin-vue-admin/model/request"
 	resp "gin-vue-admin/model/response"
 	"gin-vue-admin/service"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,6 +22,7 @@ import (
 func CreateSmartStorageProduct(c *gin.Context) {
 	var smartStorageProduct model.SmartStorageProduct
 	_ = c.ShouldBindJSON(&smartStorageProduct)
+
 	err := service.CreateSmartStorageProduct(smartStorageProduct)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("创建失败，%v", err), c)
@@ -58,7 +60,7 @@ func DeleteSmartStorageProduct(c *gin.Context) {
 // @Router /smartStorageProduct/deleteSmartStorageProductByIds [delete]
 func DeleteSmartStorageProductByIds(c *gin.Context) {
 	var IDS request.IdsReq
-    _ = c.ShouldBindJSON(&IDS)
+	_ = c.ShouldBindJSON(&IDS)
 	err := service.DeleteSmartStorageProductByIds(IDS)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("删除失败，%v", err), c)
@@ -115,6 +117,7 @@ func FindSmartStorageProduct(c *gin.Context) {
 // @Router /smartStorageProduct/getSmartStorageProductList [get]
 func GetSmartStorageProductList(c *gin.Context) {
 	var pageInfo request.SmartStorageProductSearch
+
 	_ = c.ShouldBindQuery(&pageInfo)
 	err, list, total := service.GetSmartStorageProductInfoList(pageInfo)
 	if err != nil {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="search-term">
-      <el-form :inline="true" :model="searchInfo" class="demo-form-inline">            
+      <el-form :inline="true" :model="searchInfo" class="demo-form-inline">
         <el-form-item>
           <el-button @click="onSubmit" type="primary">查询</el-button>
         </el-form-item>
@@ -11,10 +11,10 @@
         <el-form-item>
           <el-popover placement="top" v-model="deleteVisible" width="160">
             <p>确定要删除吗？</p>
-              <div style="text-align: right; margin: 0">
-                <el-button @click="deleteVisible = false" size="mini" type="text">取消</el-button>
-                <el-button @click="onDelete" size="mini" type="primary">确定</el-button>
-              </div>
+            <div style="text-align: right; margin: 0">
+              <el-button @click="deleteVisible = false" size="mini" type="text">取消</el-button>
+              <el-button @click="onDelete" size="mini" type="primary">确定</el-button>
+            </div>
             <el-button icon="el-icon-delete" size="mini" slot="reference" type="danger">批量删除</el-button>
           </el-popover>
         </el-form-item>
@@ -29,23 +29,23 @@
       style="width: 100%"
       tooltip-effect="dark"
     >
-    <el-table-column type="selection" width="55"></el-table-column>
-    <el-table-column label="日期" width="180">
-         <template slot-scope="scope">{{scope.row.CreatedAt|formatDate}}</template>
-    </el-table-column>
-    
-    <el-table-column label="productId字段" prop="productId" width="120"></el-table-column> 
-    
-    <el-table-column label="productName字段" prop="productName" width="120"></el-table-column> 
-    
-    <el-table-column label="productWeight字段" prop="productWeight" width="120"></el-table-column> 
-    
-    <el-table-column label="productDescription字段" prop="productDescription" width="120"></el-table-column> 
-    
-    <el-table-column label="productImgUrl字段" prop="productImgUrl" width="120"></el-table-column> 
-    
-    <el-table-column label="productNumber字段" prop="productNumber" width="120"></el-table-column> 
-    
+      <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column label="日期" width="180">
+        <template slot-scope="scope">{{scope.row.CreatedAt|formatDate}}</template>
+      </el-table-column>
+
+      <el-table-column label="productId字段" prop="productId" width="120"></el-table-column>
+
+      <el-table-column label="productName字段" prop="productName" width="120"></el-table-column>
+
+      <el-table-column label="productWeight字段" prop="productWeight" width="120"></el-table-column>
+
+      <el-table-column label="productDescription字段" prop="productDescription" width="120"></el-table-column>
+
+      <el-table-column label="productImgUrl字段" prop="productImgUrl" width="120"></el-table-column>
+
+      <el-table-column label="productNumber字段" prop="productNumber" width="120"></el-table-column>
+
       <el-table-column label="按钮组">
         <template slot-scope="scope">
           <el-button @click="updateSmartStorageProduct(scope.row)" size="small" type="primary">变更</el-button>
@@ -73,32 +73,52 @@
     ></el-pagination>
 
     <el-dialog :before-close="closeDialog" :visible.sync="dialogFormVisible" title="弹窗操作">
-       <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="100px">
-      <el-form-item label="货品编号" prop="productId">
-        <el-input v-model="formData.productId" placeholder="请输入货品编号" clearable :style="{width: '100%'}">
-        </el-input>
-      </el-form-item>
-      <el-form-item label="货品名称" prop="productName">
-        <el-input v-model="formData.productName" placeholder="请输入货品名称" clearable :style="{width: '100%'}">
-        </el-input>
-      </el-form-item>
-      <el-form-item label="货品重量" prop="productWeight">
-        <el-input-number v-model="formData.productWeight" placeholder="货品重量"></el-input-number>
-      </el-form-item>
-      <el-form-item label="货品描述" prop="productDescription">
-        <el-input v-model="formData.productDescription" type="textarea" placeholder="请输入货品描述"
-          :autosize="{minRows: 4, maxRows: 4}" :style="{width: '100%'}"></el-input>
-      </el-form-item>
-      <el-form-item label-width="0" prop="productImg" required>
-        <el-upload ref="productImg" :file-list="productImgfileList" :action="productImgAction" on-success="updatefilelist"
-          :before-upload="productImgBeforeUpload" list-type="picture" >
-          <el-button size="small" type="primary" icon="el-icon-upload">点击上传</el-button>
-        </el-upload>
-      </el-form-item>
-      <el-form-item label="货品数量" prop="productNumber">
-        <el-input-number v-model="formData.productNumber" placeholder="货品数量"></el-input-number>
-      </el-form-item>
-    </el-form>
+      <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="100px">
+        <el-form-item label="货品编号" prop="productId">
+          <el-input
+            v-model="formData.productId"
+            placeholder="请输入货品编号"
+            clearable
+            :style="{width: '100%'}"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="货品名称" prop="productName">
+          <el-input
+            v-model="formData.productName"
+            placeholder="请输入货品名称"
+            clearable
+            :style="{width: '100%'}"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="货品重量" prop="productWeight">
+          <el-input-number v-model="formData.productWeight" placeholder="货品重量"></el-input-number>
+        </el-form-item>
+        <el-form-item label="货品描述" prop="productDescription">
+          <el-input
+            v-model="formData.productDescription"
+            type="textarea"
+            placeholder="请输入货品描述"
+            :autosize="{minRows: 4, maxRows: 4}"
+            :style="{width: '100%'}"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label-width="0" prop="productImg" required>
+          <el-upload
+            ref="productImg"
+            :file-list="productImgfileList"
+            :action="productImgAction"
+            :on-success="updatefilelist"
+            :before-upload="productImgBeforeUpload"
+            list-type="picture"
+            :headers="headinfo"
+          >
+            <el-button size="small" type="primary" icon="el-icon-upload">点击上传</el-button>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="货品数量" prop="filename">
+          <el-input-number v-model="formData.productNumber" placeholder="货品数量"></el-input-number>
+        </el-form-item>
+      </el-form>
       <div class="dialog-footer" slot="footer">
         <el-button @click="closeDialog">取 消</el-button>
         <el-button @click="enterDialog" type="primary">确 定</el-button>
@@ -109,23 +129,29 @@
 
 <script>
 import {
-    createSmartStorageProduct,
-    deleteSmartStorageProduct,
-    deleteSmartStorageProductByIds,
-    updateSmartStorageProduct,
-    findSmartStorageProduct,
-    getSmartStorageProductList
-} from "@/api/smartStorageProduct";  //  此处请自行替换地址
+  createSmartStorageProduct,
+  deleteSmartStorageProduct,
+  deleteSmartStorageProductByIds,
+  updateSmartStorageProduct,
+  findSmartStorageProduct,
+  getSmartStorageProductList
+} from "@/api/smartStorageProduct"; //  此处请自行替换地址
 import { formatTimeToStr } from "@/utils/data";
 import infoList from "@/components/mixins/infoList";
-  const path = process.env.VUE_APP_BASE_API;
-
+import { store } from "@/store/index";
+const path = process.env.VUE_APP_BASE_API;
+const token = store.getters["user/token"];
+const user = store.getters["user/userInfo"];
 export default {
   name: "SmartStorageProduct",
 
   mixins: [infoList],
   data() {
     return {
+      headinfo: {
+        "x-token": token,
+        "x-user-id": user.ID
+      },
       listApi: getSmartStorageProductList,
       dialogFormVisible: false,
       visible: false,
@@ -133,34 +159,47 @@ export default {
       deleteVisible: false,
       multipleSelection: [],
       formData: {
-        productId:null,productName:null,productWeight:null,productDescription:null,productImgUrl:null,productNumber:null,
+        productId: null,
+        productName: null,
+        productWeight: null,
+        productDescription: null,
+        productImgUrl: null,
+        productNumber: null
       },
       rules: {
-        productId: [{
-          required: true,
-          message: '请输入货品编号',
-          trigger: 'blur'
-        }],
-        productName: [{
-          required: true,
-          message: '请输入货品名称',
-          trigger: 'blur'
-        }],
-        productWeight: [{
-          required: true,
-          message: '货品重量',
-          trigger: 'blur'
-        }],
-        productDescription: [{
-          required: true,
-          message: '请输入货品描述',
-          trigger: 'blur'
-        }],
-        productNumber: [],
+        productId: [
+          {
+            required: true,
+            message: "请输入货品编号",
+            trigger: "blur"
+          }
+        ],
+        productName: [
+          {
+            required: true,
+            message: "请输入货品名称",
+            trigger: "blur"
+          }
+        ],
+        productWeight: [
+          {
+            required: true,
+            message: "货品重量",
+            trigger: "blur"
+          }
+        ],
+        productDescription: [
+          {
+            required: true,
+            message: "请输入货品描述",
+            trigger: "blur"
+          }
+        ],
+        productNumber: []
       },
-      
-      productImgAction: path+'/fileUploadAndDownload/upload',
-      productImgfileList: [],
+
+      productImgAction: path + "/fileUploadAndDownload/upload",
+      productImgfileList: []
     };
   },
   filters: {
@@ -174,38 +213,42 @@ export default {
     },
     formatBoolean: function(bool) {
       if (bool != null) {
-        return bool ? "是" :"否";
+        return bool ? "是" : "否";
       } else {
         return "";
       }
     }
   },
   methods: {
-      //条件搜索前端看此方法
-      onSubmit() {
-        this.page = 1
-        this.pageSize = 10          
-        this.getTableData()
-      },
-      handleSelectionChange(val) {
-        this.multipleSelection = val
-      },
-      async onDelete() {
-        const ids = []
-        this.multipleSelection &&
-          this.multipleSelection.map(item => {
-            ids.push(item.ID)
-          })
-        const res = await deleteSmartStorageProductByIds({ ids })
-        if (res.code == 0) {
-          this.$message({
-            type: 'success',
-            message: '删除成功'
-          })
-          this.deleteVisible = false
-          this.getTableData()
-        }
-      },
+    updatefilelist(response) {
+      debugger;
+      this.formData.productImgUrl = response.data.file.key;
+    },
+    //条件搜索前端看此方法
+    onSubmit() {
+      this.page = 1;
+      this.pageSize = 10;
+      this.getTableData();
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    async onDelete() {
+      const ids = [];
+      this.multipleSelection &&
+        this.multipleSelection.map(item => {
+          ids.push(item.ID);
+        });
+      const res = await deleteSmartStorageProductByIds({ ids });
+      if (res.code == 0) {
+        this.$message({
+          type: "success",
+          message: "删除成功"
+        });
+        this.deleteVisible = false;
+        this.getTableData();
+      }
+    },
     async updateSmartStorageProduct(row) {
       const res = await findSmartStorageProduct({ ID: row.ID });
       this.type = "update";
@@ -215,22 +258,21 @@ export default {
       }
     },
     productImgBeforeUpload(file) {
-      let isRightSize = file.size / 1024 / 1024 < 5
+      let isRightSize = file.size / 1024 / 1024 < 5;
       if (!isRightSize) {
-        this.$message.error('文件大小超过 5MB')
+        this.$message.error("文件大小超过 5MB");
       }
-      return isRightSize
+      return isRightSize;
     },
     closeDialog() {
       this.dialogFormVisible = false;
       this.formData = {
-        
-          productId:null,
-          productName:null,
-          productWeight:null,
-          productDescription:null,
-          productImgUrl:null,
-          productNumber:null,
+        productId: null,
+        productName: null,
+        productWeight: null,
+        productDescription: null,
+        productImgUrl: null,
+        productNumber: null
       };
     },
     async deleteSmartStorageProduct(row) {
@@ -259,9 +301,9 @@ export default {
       }
       if (res.code == 0) {
         this.$message({
-          type:"success",
-          message:"创建/更改成功"
-        })
+          type: "success",
+          message: "创建/更改成功"
+        });
         this.closeDialog();
         this.getTableData();
       }
