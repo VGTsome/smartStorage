@@ -1,13 +1,14 @@
 package router
 
 import (
-	"gin-vue-admin/api/v1"
+	v1 "gin-vue-admin/api/v1"
+	"gin-vue-admin/middleware"
+
 	"github.com/gin-gonic/gin"
 )
 
 func InitFileUploadAndDownloadRouter(Router *gin.RouterGroup) {
-	FileUploadAndDownloadGroup := Router.Group("fileUploadAndDownload")
-	// .Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
+	FileUploadAndDownloadGroup := Router.Group("fileUploadAndDownload").Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
 	{
 		FileUploadAndDownloadGroup.POST("/upload", v1.UploadFile)                                 // 上传文件
 		FileUploadAndDownloadGroup.POST("/getFileList", v1.GetFileList)                           // 获取上传文件列表
