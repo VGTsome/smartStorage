@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : localhost
+ Source Server         : 127.0.0.1
  Source Server Type    : MariaDB
- Source Server Version : 100411
- Source Host           : localhost:3306
+ Source Server Version : 100406
+ Source Host           : 127.0.0.1:3306
  Source Schema         : qmplus
 
  Target Server Type    : MariaDB
- Target Server Version : 100411
+ Target Server Version : 100406
  File Encoding         : 65001
 
- Date: 18/07/2020 22:14:40
+ Date: 20/07/2020 14:44:19
 */
 
 SET NAMES utf8mb4;
@@ -272,7 +272,7 @@ CREATE TABLE `exa_file_upload_and_downloads`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_file_upload_and_downloads_deleted_at`(`deleted_at`) USING BTREE,
   INDEX `idx_exa_file_upload_and_downloads_deleted_at`(`deleted_at`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 35 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of exa_file_upload_and_downloads
@@ -294,6 +294,7 @@ INSERT INTO `exa_file_upload_and_downloads` VALUES (31, '2020-07-18 21:58:44', '
 INSERT INTO `exa_file_upload_and_downloads` VALUES (32, '2020-07-18 22:02:23', '2020-07-18 22:02:23', NULL, '2+徐望+101410322251654+身份证.jpg', 'fileDir/', 'jpg', '1595080943_10.jpg');
 INSERT INTO `exa_file_upload_and_downloads` VALUES (33, '2020-07-18 22:05:50', '2020-07-18 22:05:50', NULL, '2+徐望+101410322251654+身份证.jpg', 'fileDir/', 'jpg', '1595081150_10.jpg');
 INSERT INTO `exa_file_upload_and_downloads` VALUES (34, '2020-07-18 22:08:00', '2020-07-18 22:08:00', NULL, '2+徐望+101410322251654+身份证.jpg', 'fileDir/', 'jpg', '1595081280_10.jpg');
+INSERT INTO `exa_file_upload_and_downloads` VALUES (35, '2020-07-20 11:49:49', '2020-07-20 11:49:49', NULL, '176_272354_e50d5bc53324bad.jpg', 'fileDir/', 'jpg', '1595216989_10.jpg');
 
 -- ----------------------------
 -- Table structure for exa_files
@@ -448,7 +449,7 @@ CREATE TABLE `smart_storage_product`  (
   `product_number` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_smart_storage_product_deleted_at`(`deleted_at`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of smart_storage_product
@@ -457,6 +458,7 @@ INSERT INTO `smart_storage_product` VALUES (1, '2020-07-18 16:34:27', '2020-07-1
 INSERT INTO `smart_storage_product` VALUES (2, '2020-07-18 21:37:01', '2020-07-18 21:37:01', NULL, 0, '2', 1, '33', '', 1);
 INSERT INTO `smart_storage_product` VALUES (3, '2020-07-18 21:45:59', '2020-07-18 21:45:59', NULL, 0, '2', 0, '34', '', 1);
 INSERT INTO `smart_storage_product` VALUES (4, '2020-07-18 22:08:03', '2020-07-18 22:08:03', NULL, 0, '234', 1, '23', '1595081280_10.jpg', 1);
+INSERT INTO `smart_storage_product` VALUES (5, '2020-07-20 11:49:57', '2020-07-20 11:49:57', NULL, 0, '1243', 1, '31232', '1595216989_10.jpg', 0);
 
 -- ----------------------------
 -- Table structure for sys_apis
@@ -867,7 +869,7 @@ CREATE TABLE `sys_operation_records`  (
   `resp` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '响应Body',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_sys_operation_records_deleted_at`(`deleted_at`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 591 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 599 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of sys_operation_records
@@ -1121,6 +1123,14 @@ INSERT INTO `sys_operation_records` VALUES (587, '2020-07-18 22:02:46', '2020-07
 INSERT INTO `sys_operation_records` VALUES (588, '2020-07-18 22:06:57', '2020-07-18 22:06:57', NULL, '127.0.0.1', 'GET', '/smartStorageProduct/getSmartStorageProductList', 200, 999900, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36', '', '', 10, '{\"code\":0,\"data\":{\"list\":[{\"ID\":2,\"CreatedAt\":\"2020-07-18T21:37:01+08:00\",\"UpdatedAt\":\"2020-07-18T21:37:01+08:00\",\"DeletedAt\":null,\"productId\":0,\"productName\":\"2\",\"productWeight\":1,\"productDescription\":\"33\",\"productImgUrl\":\"\",\"productNumber\":1},{\"ID\":3,\"CreatedAt\":\"2020-07-18T21:45:59+08:00\",\"UpdatedAt\":\"2020-07-18T21:45:59+08:00\",\"DeletedAt\":null,\"productId\":0,\"productName\":\"2\",\"productWeight\":0,\"productDescription\":\"34\",\"productImgUrl\":\"\",\"productNumber\":1}],\"total\":2,\"page\":1,\"pageSize\":10},\"msg\":\"操作成功\"}');
 INSERT INTO `sys_operation_records` VALUES (589, '2020-07-18 22:08:03', '2020-07-18 22:08:03', NULL, '127.0.0.1', 'POST', '/smartStorageProduct/createSmartStorageProduct', 200, 31993300, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36', '', '{\"productId\":\"434\",\"productName\":\"234\",\"productWeight\":1,\"productDescription\":\"23\",\"productImgUrl\":\"1595081280_10.jpg\",\"productNumber\":1}', 10, '{\"code\":0,\"data\":{},\"msg\":\"创建成功\"}');
 INSERT INTO `sys_operation_records` VALUES (590, '2020-07-18 22:08:03', '2020-07-18 22:08:03', NULL, '127.0.0.1', 'GET', '/smartStorageProduct/getSmartStorageProductList', 200, 0, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36', '', '', 10, '{\"code\":0,\"data\":{\"list\":[{\"ID\":2,\"CreatedAt\":\"2020-07-18T21:37:01+08:00\",\"UpdatedAt\":\"2020-07-18T21:37:01+08:00\",\"DeletedAt\":null,\"productId\":0,\"productName\":\"2\",\"productWeight\":1,\"productDescription\":\"33\",\"productImgUrl\":\"\",\"productNumber\":1},{\"ID\":3,\"CreatedAt\":\"2020-07-18T21:45:59+08:00\",\"UpdatedAt\":\"2020-07-18T21:45:59+08:00\",\"DeletedAt\":null,\"productId\":0,\"productName\":\"2\",\"productWeight\":0,\"productDescription\":\"34\",\"productImgUrl\":\"\",\"productNumber\":1},{\"ID\":4,\"CreatedAt\":\"2020-07-18T22:08:03+08:00\",\"UpdatedAt\":\"2020-07-18T22:08:03+08:00\",\"DeletedAt\":null,\"productId\":0,\"productName\":\"234\",\"productWeight\":1,\"productDescription\":\"23\",\"productImgUrl\":\"1595081280_10.jpg\",\"productNumber\":1}],\"total\":3,\"page\":1,\"pageSize\":10},\"msg\":\"操作成功\"}');
+INSERT INTO `sys_operation_records` VALUES (591, '2020-07-20 10:17:38', '2020-07-20 10:17:38', NULL, '127.0.0.1', 'GET', '/sscp/getCabinetProductList', 200, 2998200, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36', '', '', 10, '{\"code\":0,\"data\":{\"list\":[],\"total\":0,\"page\":1,\"pageSize\":10},\"msg\":\"操作成功\"}');
+INSERT INTO `sys_operation_records` VALUES (592, '2020-07-20 10:17:42', '2020-07-20 10:17:42', NULL, '127.0.0.1', 'GET', '/smartStorageProduct/getSmartStorageProductList', 200, 4999000, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36', '', '', 10, '{\"code\":0,\"data\":{\"list\":[{\"ID\":2,\"CreatedAt\":\"2020-07-18T21:37:01+08:00\",\"UpdatedAt\":\"2020-07-18T21:37:01+08:00\",\"DeletedAt\":null,\"productId\":0,\"productName\":\"2\",\"productWeight\":1,\"productDescription\":\"33\",\"productImgUrl\":\"\",\"productNumber\":1},{\"ID\":3,\"CreatedAt\":\"2020-07-18T21:45:59+08:00\",\"UpdatedAt\":\"2020-07-18T21:45:59+08:00\",\"DeletedAt\":null,\"productId\":0,\"productName\":\"2\",\"productWeight\":0,\"productDescription\":\"34\",\"productImgUrl\":\"\",\"productNumber\":1},{\"ID\":4,\"CreatedAt\":\"2020-07-18T22:08:03+08:00\",\"UpdatedAt\":\"2020-07-18T22:08:03+08:00\",\"DeletedAt\":null,\"productId\":0,\"productName\":\"234\",\"productWeight\":1,\"productDescription\":\"23\",\"productImgUrl\":\"1595081280_10.jpg\",\"productNumber\":1}],\"total\":3,\"page\":1,\"pageSize\":10},\"msg\":\"操作成功\"}');
+INSERT INTO `sys_operation_records` VALUES (593, '2020-07-20 10:24:03', '2020-07-20 10:24:03', NULL, '127.0.0.1', 'GET', '/smartStorageDoor/getSmartStorageDoorList', 200, 2999800, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36', '', '', 10, '{\"code\":0,\"data\":{\"list\":[],\"total\":0,\"page\":1,\"pageSize\":10},\"msg\":\"操作成功\"}');
+INSERT INTO `sys_operation_records` VALUES (594, '2020-07-20 11:49:35', '2020-07-20 11:49:35', NULL, '127.0.0.1', 'GET', '/smartStorageCabinet/getSmartStorageCabinetList', 200, 6712500, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36', '', '', 10, '{\"code\":0,\"data\":{\"list\":[],\"total\":0,\"page\":1,\"pageSize\":10},\"msg\":\"操作成功\"}');
+INSERT INTO `sys_operation_records` VALUES (595, '2020-07-20 11:49:37', '2020-07-20 11:49:37', NULL, '127.0.0.1', 'GET', '/smartStorageOrder/getSmartStorageOrderList', 200, 5994500, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36', '', '', 10, '{\"code\":0,\"data\":{\"list\":[{\"ID\":1,\"CreatedAt\":\"2020-07-16T18:01:45+08:00\",\"UpdatedAt\":\"2020-07-16T18:01:45+08:00\",\"DeletedAt\":null,\"orderId\":0,\"userId\":0,\"productId\":0,\"orderStatus\":0}],\"total\":1,\"page\":1,\"pageSize\":10},\"msg\":\"操作成功\"}');
+INSERT INTO `sys_operation_records` VALUES (596, '2020-07-20 11:49:38', '2020-07-20 11:49:38', NULL, '127.0.0.1', 'GET', '/smartStorageProduct/getSmartStorageProductList', 200, 1998100, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36', '', '', 10, '{\"code\":0,\"data\":{\"list\":[{\"ID\":2,\"CreatedAt\":\"2020-07-18T21:37:01+08:00\",\"UpdatedAt\":\"2020-07-18T21:37:01+08:00\",\"DeletedAt\":null,\"productId\":0,\"productName\":\"2\",\"productWeight\":1,\"productDescription\":\"33\",\"productImgUrl\":\"\",\"productNumber\":1},{\"ID\":3,\"CreatedAt\":\"2020-07-18T21:45:59+08:00\",\"UpdatedAt\":\"2020-07-18T21:45:59+08:00\",\"DeletedAt\":null,\"productId\":0,\"productName\":\"2\",\"productWeight\":0,\"productDescription\":\"34\",\"productImgUrl\":\"\",\"productNumber\":1},{\"ID\":4,\"CreatedAt\":\"2020-07-18T22:08:03+08:00\",\"UpdatedAt\":\"2020-07-18T22:08:03+08:00\",\"DeletedAt\":null,\"productId\":0,\"productName\":\"234\",\"productWeight\":1,\"productDescription\":\"23\",\"productImgUrl\":\"1595081280_10.jpg\",\"productNumber\":1}],\"total\":3,\"page\":1,\"pageSize\":10},\"msg\":\"操作成功\"}');
+INSERT INTO `sys_operation_records` VALUES (597, '2020-07-20 11:49:57', '2020-07-20 11:49:57', NULL, '127.0.0.1', 'POST', '/smartStorageProduct/createSmartStorageProduct', 200, 6532800, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36', '', '{\"productId\":\"333\",\"productName\":\"1243\",\"productWeight\":1,\"productDescription\":\"31232\",\"productImgUrl\":\"1595216989_10.jpg\",\"productNumber\":0}', 10, '{\"code\":0,\"data\":{},\"msg\":\"创建成功\"}');
+INSERT INTO `sys_operation_records` VALUES (598, '2020-07-20 11:49:57', '2020-07-20 11:49:57', NULL, '127.0.0.1', 'GET', '/smartStorageProduct/getSmartStorageProductList', 200, 3997200, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36', '', '', 10, '{\"code\":0,\"data\":{\"list\":[{\"ID\":2,\"CreatedAt\":\"2020-07-18T21:37:01+08:00\",\"UpdatedAt\":\"2020-07-18T21:37:01+08:00\",\"DeletedAt\":null,\"productId\":0,\"productName\":\"2\",\"productWeight\":1,\"productDescription\":\"33\",\"productImgUrl\":\"\",\"productNumber\":1},{\"ID\":3,\"CreatedAt\":\"2020-07-18T21:45:59+08:00\",\"UpdatedAt\":\"2020-07-18T21:45:59+08:00\",\"DeletedAt\":null,\"productId\":0,\"productName\":\"2\",\"productWeight\":0,\"productDescription\":\"34\",\"productImgUrl\":\"\",\"productNumber\":1},{\"ID\":4,\"CreatedAt\":\"2020-07-18T22:08:03+08:00\",\"UpdatedAt\":\"2020-07-18T22:08:03+08:00\",\"DeletedAt\":null,\"productId\":0,\"productName\":\"234\",\"productWeight\":1,\"productDescription\":\"23\",\"productImgUrl\":\"1595081280_10.jpg\",\"productNumber\":1},{\"ID\":5,\"CreatedAt\":\"2020-07-20T11:49:57+08:00\",\"UpdatedAt\":\"2020-07-20T11:49:57+08:00\",\"DeletedAt\":null,\"productId\":0,\"productName\":\"1243\",\"productWeight\":1,\"productDescription\":\"31232\",\"productImgUrl\":\"1595216989_10.jpg\",\"productNumber\":0}],\"total\":4,\"page\":1,\"pageSize\":10},\"msg\":\"操作成功\"}');
 
 -- ----------------------------
 -- Table structure for sys_users
