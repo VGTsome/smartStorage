@@ -111,6 +111,7 @@
             :before-upload="productImgBeforeUpload"
             list-type="picture"
             :headers="headinfo"
+            :limit="1"
           >
             <el-button size="small" type="primary" icon="el-icon-upload">点击上传</el-button>
           </el-upload>
@@ -221,7 +222,7 @@ export default {
   },
   methods: {
     updatefilelist(response) {
-      debugger;
+
       this.formData.productImgUrl = response.data.file.key;
     },
     //条件搜索前端看此方法
@@ -306,6 +307,7 @@ export default {
         });
         this.closeDialog();
         this.getTableData();
+        this.$refs.productImg.clearFiles()
       }
     },
     openDialog() {

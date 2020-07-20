@@ -14,6 +14,7 @@ import (
 // 初始化总路由
 
 func Routers() *gin.Engine {
+	//gin.SetMode(gin.ReleaseMode)
 	var Router = gin.Default()
 	// Router.Use(middleware.LoadTls())  // 打开就能玩https了
 	global.GVA_LOG.Debug("use middleware logger")
