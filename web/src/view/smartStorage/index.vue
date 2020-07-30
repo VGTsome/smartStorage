@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: 'SmartStorage'
+  name: 'SmartStorage',
 }
 </script>
 <style lang="scss">
