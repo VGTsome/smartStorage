@@ -24,12 +24,13 @@ import (
 func UploadFile(c *gin.Context) {
 	noSave := c.DefaultQuery("noSave", "0")
 	_, header, err := c.Request.FormFile("file")
+
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("上传文件失败，%v", err), c)
 	} else {
 		// 文件上传后拿到文件路径
 
-		err, filePath, key := utils.UploadLocal(header, c)
+		err, filePath, key := utils.UploadLocal(header, c, "fileDir/software/")
 
 		if err != nil {
 			response.FailWithMessage(fmt.Sprintf("接收返回值失败，%v", err), c)
