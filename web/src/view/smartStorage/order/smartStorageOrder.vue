@@ -5,31 +5,12 @@
                :model="searchInfo"
                class="demo-form-inline">
         <el-form-item>
-          <el-button @click="onSubmit"
+          <el-button @blur="onSubmit"
                      type="primary">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button @click="openDialog"
-                     type="primary">新增smartStorageOrder表</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-popover placement="top"
-                      v-model="deleteVisible"
-                      width="160">
-            <p>确定要删除吗？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button @click="deleteVisible = false"
-                         size="mini"
-                         type="text">取消</el-button>
-              <el-button @click="onDelete"
-                         size="mini"
-                         type="primary">确定</el-button>
-            </div>
-            <el-button icon="el-icon-delete"
-                       size="mini"
-                       slot="reference"
-                       type="danger">批量删除</el-button>
-          </el-popover>
+                     type="primary">购物车</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -55,18 +36,15 @@
                        prop="productDescription"
                        width="120"></el-table-column>
 
-      <el-table-column label="productId字段"
+      <el-table-column label="物料编码"
                        prop="productId"
-                       width="120"></el-table-column>
-
-      <el-table-column label="orderStatus字段"
-                       prop="orderStatus"
                        width="120"></el-table-column>
 
       <el-table-column label="按钮组">
         <template slot-scope="scope">
           <el-input-number placeholder="计数器"
                            v-model=scope.row.orderNumber
+                           @change="updateCart(scope.row)"
                            :min=0></el-input-number>
         </template>
       </el-table-column>
@@ -84,12 +62,45 @@
     <el-dialog :before-close="closeDialog"
                :visible.sync="dialogFormVisible"
                title="弹窗操作">
-      此处请使用表单生成器生成form填充 表单默认绑定 formData 如手动修改过请自行修改key
+      <el-table :data="cartData"
+                @selection-change="handleSelectionChange"
+                border
+                ref="multipleTable"
+                stripe
+                style="width: 100%"
+                tooltip-effect="dark">
+        <el-table-column label="图片"
+                         width="180">
+          <template slot-scope="scope"><img :src=scope.row.productImgUrl /></template>
+        </el-table-column>
+        <el-table-column label="货名"
+                         prop="productName"
+                         width="120"></el-table-column>
+        <el-table-column label="货品描述"
+                         prop="productDescription"
+                         width="120"></el-table-column>
+        <el-table-column label="订货数量"
+                         prop="orderNumber"
+                         width="120"></el-table-column>
+      </el-table>
       <div class="dialog-footer"
            slot="footer">
         <el-button @click="closeDialog">取 消</el-button>
-        <el-button @click="enterDialog"
-                   type="primary">确 定</el-button>
+        <el-popover placement="top"
+                    v-model="enterVisible"
+                    width="160">
+          <p>确定提交吗？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button @click="enterVisible = false"
+                       size="mini"
+                       type="text">取消</el-button>
+            <el-button @click="enterDialog"
+                       size="mini"
+                       type="primary">确定</el-button>
+          </div>
+          <el-button slot="reference"
+                     type="primary">提交订单</el-button>
+        </el-popover>
       </div>
     </el-dialog>
   </div>
@@ -117,37 +128,23 @@ export default {
   data() {
     return {
       listApi: getSmartStorageProductList,
-      tableData2: [],
       dialogFormVisible: false,
+      enterVisible: false,
       visible: false,
       type: '',
-      deleteVisible: false,
-      multipleSelection: [],
-      formData: [
-        { orderId: null, userId: null, productId: null, orderStatus: null },
-      ],
+      cartData: [],
+      formData: [],
     }
   },
-  filters: {
-    formatDate: function (time) {
-      if (time != null && time != '') {
-        var date = new Date(time)
-        return formatTimeToStr(date, 'yyyy-MM-dd hh:mm:ss')
-      } else {
-        return ''
-      }
-    },
-    formatBoolean: function (bool) {
-      if (bool != null) {
-        return bool ? '是' : '否'
-      } else {
-        return ''
-      }
-    },
-  },
+  filters: {},
   methods: {
     updateCart(val) {
-      console.log(val)
+      this.cartData.forEach((item, $index) => {
+        if (item.ID == val.ID) {
+          this.cartData.pop($index)
+        }
+      })
+      this.cartData.push(val)
     },
     //条件搜索前端看此方法
     onSubmit() {
@@ -184,12 +181,7 @@ export default {
     },
     closeDialog() {
       this.dialogFormVisible = false
-      this.formData = {
-        orderId: null,
-        userId: null,
-        productId: null,
-        orderStatus: null,
-      }
+      this.formData = []
     },
     async deleteSmartStorageOrder(row) {
       this.visible = false
@@ -203,16 +195,23 @@ export default {
       }
     },
     async enterDialog() {
+      const fdata = []
+      this.cartData.forEach((item) => {
+        fdata.push({
+          productId: item.productId,
+          orderNumber: item.orderNumber,
+        })
+      })
       let res
       switch (this.type) {
         case 'create':
-          res = await createSmartStorageOrder(this.formData)
+          res = await createSmartStorageOrder({ fdata })
           break
         case 'update':
-          res = await updateSmartStorageOrder(this.formData)
+          res = await updateSmartStorageOrder({ fdata })
           break
         default:
-          res = await createSmartStorageOrder(this.formData)
+          res = await createSmartStorageOrder({ fdata })
           break
       }
       if (res.code == 0) {
@@ -220,20 +219,20 @@ export default {
           type: 'success',
           message: '创建/更改成功',
         })
+        this.enterVisible = false
         this.closeDialog()
         this.getTableData()
       }
     },
     openDialog() {
-      this.type = 'create'
+      //this.type = 'create'
       this.dialogFormVisible = true
     },
     async init() {
-      debugger
       await this.getTableData()
 
       this.tableData.forEach((item) => {
-        item.orderNumber = 2
+        item.orderNumber = 0
       })
     },
   },

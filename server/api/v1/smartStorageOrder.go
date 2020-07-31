@@ -7,6 +7,8 @@ import (
 	"gin-vue-admin/model/request"
 	resp "gin-vue-admin/model/response"
 	"gin-vue-admin/service"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,9 +21,14 @@ import (
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /smartStorageOrder/createSmartStorageOrder [post]
 func CreateSmartStorageOrder(c *gin.Context) {
-	var smartStorageOrder model.SmartStorageOrder
-	_ = c.ShouldBindJSON(&smartStorageOrder)
-	err := service.CreateSmartStorageOrder(smartStorageOrder)
+	var SSOLRQ request.SmartStorageOrderListReq
+	_ = c.ShouldBindJSON(&SSOLRQ)
+
+	userId, err1 := strconv.Atoi(c.Request.Header.Get("x-user-id"))
+	if err1 != nil {
+		userId = 0
+	}
+	err := service.CreateSmartStorageOrder(SSOLRQ, userId)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("创建失败，%v", err), c)
 	} else {
@@ -58,7 +65,7 @@ func DeleteSmartStorageOrder(c *gin.Context) {
 // @Router /smartStorageOrder/deleteSmartStorageOrderByIds [delete]
 func DeleteSmartStorageOrderByIds(c *gin.Context) {
 	var IDS request.IdsReq
-    _ = c.ShouldBindJSON(&IDS)
+	_ = c.ShouldBindJSON(&IDS)
 	err := service.DeleteSmartStorageOrderByIds(IDS)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("删除失败，%v", err), c)

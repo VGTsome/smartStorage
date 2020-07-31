@@ -12,8 +12,22 @@ import (
 // @auth                     （2020/04/05  20:22）
 // @return    err             error
 
-func CreateSmartStorageOrder(smartStorageOrder model.SmartStorageOrder) (err error) {
-	err = global.GVA_DB.Create(&smartStorageOrder).Error
+func CreateSmartStorageOrder(smartStorageOrderListReq request.SmartStorageOrderListReq, userId int) (err error) {
+
+	var smartStorageOrder model.SmartStorageOrder
+	errcheck := global.GVA_DB.Where("user_id = ?", userId).Not("order_status", "10").First(&smartStorageOrder).Error
+	if errcheck != nil {
+		return errcheck
+	}
+
+	for i := 0; i < len(smartStorageOrderListReq.SmartStorageOrderList); i++ {
+		smartStorageOrderListReq.SmartStorageOrderList[i].UserId = userId
+		err = global.GVA_DB.Create(&(smartStorageOrderListReq.SmartStorageOrderList[i])).Error
+		if err != nil {
+			break
+		}
+	}
+
 	return err
 }
 
@@ -35,7 +49,7 @@ func DeleteSmartStorageOrder(smartStorageOrder model.SmartStorageOrder) (err err
 // @return                    error
 
 func DeleteSmartStorageOrderByIds(ids request.IdsReq) (err error) {
-	err = global.GVA_DB.Delete(&[]model.SmartStorageOrder{},"id in (?)",ids.Ids).Error
+	err = global.GVA_DB.Delete(&[]model.SmartStorageOrder{}, "id in (?)", ids.Ids).Error
 	return err
 }
 
@@ -71,10 +85,10 @@ func GetSmartStorageOrder(id uint) (err error, smartStorageOrder model.SmartStor
 func GetSmartStorageOrderInfoList(info request.SmartStorageOrderSearch) (err error, list interface{}, total int) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-    // 创建db
+	// 创建db
 	db := global.GVA_DB.Model(&model.SmartStorageOrder{})
-    var smartStorageOrders []model.SmartStorageOrder
-    // 如果有条件搜索 下方会自动创建搜索语句
+	var smartStorageOrders []model.SmartStorageOrder
+	// 如果有条件搜索 下方会自动创建搜索语句
 	err = db.Count(&total).Error
 	err = db.Limit(limit).Offset(offset).Find(&smartStorageOrders).Error
 	return err, smartStorageOrders, total
