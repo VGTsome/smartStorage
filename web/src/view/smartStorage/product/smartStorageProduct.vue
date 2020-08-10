@@ -4,13 +4,13 @@
       <el-form :inline="true"
                :model="searchInfo"
                class="demo-form-inline">
-        <el-form-item>
-          <el-button @click="onSubmit"
-                     type="primary">查询</el-button>
+        <el-form-item label="货品名称">
+          <el-input v-model="searchInfo.productName"
+                    placeholder="输入搜索的名称"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button @click="openDialog"
-                     type="primary">新增smartStorageProduct表</el-button>
+                     type="primary">新增货品</el-button>
         </el-form-item>
         <el-form-item>
           <el-popover placement="top"
@@ -33,7 +33,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-table :data="tableData"
+    <el-table :data="tableData.filter(data => !searchInfo.productName || data.productName.toLowerCase().includes(searchInfo.productName.toLowerCase()))"
               @selection-change="handleSelectionChange"
               border
               ref="multipleTable"
@@ -47,31 +47,33 @@
         <template slot-scope="scope">{{scope.row.CreatedAt|formatDate}}</template>
       </el-table-column>
 
-      <el-table-column label="productId字段"
+      <el-table-column label="货品编码"
                        prop="productId"
                        width="120"></el-table-column>
 
-      <el-table-column label="productName字段"
+      <el-table-column label="货品名称"
                        prop="productName"
                        width="120"></el-table-column>
 
-      <el-table-column label="productWeight字段"
+      <el-table-column label="单位重量（g）"
                        prop="productWeight"
                        width="120"></el-table-column>
 
-      <el-table-column label="productDescription字段"
+      <el-table-column label="货品描述"
                        prop="productDescription"
                        width="120"></el-table-column>
 
-      <el-table-column label="productImgUrl字段"
+      <el-table-column label="图片"
                        prop="productImgUrl"
-                       width="120"></el-table-column>
+                       width="120">
+        <template slot-scope="scope"><img :src=scope.row.productNumber /></template></el-table-column>
 
-      <el-table-column label="productNumber字段"
+      <el-table-column label="货品数量"
                        prop="productNumber"
-                       width="120"></el-table-column>
+                       width="120">
+      </el-table-column>
 
-      <el-table-column label="按钮组">
+      <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button @click="updateSmartStorageProduct(scope.row)"
                      size="small"
@@ -197,6 +199,9 @@ export default {
       headinfo: {
         'x-token': token,
         'x-user-id': user.ID,
+      },
+      searchInfo: {
+        name: '',
       },
       listApi: getSmartStorageProductList,
       dialogFormVisible: false,

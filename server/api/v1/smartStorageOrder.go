@@ -93,6 +93,17 @@ func UpdateSmartStorageOrder(c *gin.Context) {
 	}
 }
 
+func UpdateSmartStorageOrderStatus(c *gin.Context) {
+	var smartStorageOrder model.SmartStorageOrder
+	_ = c.ShouldBindJSON(&smartStorageOrder)
+	err := service.UpdateSmartStorageOrderStatus(&smartStorageOrder)
+	if err != nil {
+		response.FailWithMessage(fmt.Sprintf("更新失败，%v", err), c)
+	} else {
+		response.OkWithMessage("更新成功", c)
+	}
+}
+
 // @Tags SmartStorageOrder
 // @Summary 用id查询SmartStorageOrder
 // @Security ApiKeyAuth
@@ -120,10 +131,27 @@ func FindSmartStorageOrder(c *gin.Context) {
 // @Param data body request.SmartStorageOrderSearch true "分页获取SmartStorageOrder列表"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /smartStorageOrder/getSmartStorageOrderList [get]
-func GetSmartStorageOrderList(c *gin.Context) {
+func GetSmartStorageOrderInfoById(c *gin.Context) {
 	var pageInfo request.SmartStorageOrderSearch
 	_ = c.ShouldBindQuery(&pageInfo)
-	err, list, total := service.GetSmartStorageOrderInfoList(pageInfo)
+	userId, _ := strconv.Atoi(c.Request.Header.Get("x-user-id"))
+	err, list, total := service.GetSmartStorageOrderInfoById(pageInfo, userId)
+	if err != nil {
+		response.FailWithMessage(fmt.Sprintf("获取数据失败，%v", err), c)
+	} else {
+		response.OkWithData(resp.PageResult{
+			List:     list,
+			Total:    total,
+			Page:     pageInfo.Page,
+			PageSize: pageInfo.PageSize,
+		}, c)
+	}
+}
+
+func GetAllOrderList(c *gin.Context) {
+	var pageInfo request.SmartStorageOrderSearch
+	_ = c.ShouldBindQuery(&pageInfo)
+	err, list, total := service.GetAllOrderList(pageInfo)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取数据失败，%v", err), c)
 	} else {

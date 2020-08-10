@@ -13,7 +13,12 @@ import (
 // @return    err             error
 
 func CreateSmartStorageDoor(smartStorageDoor model.SmartStorageDoor) (err error) {
+	var stemp model.SmartStorageDoor
+	db := global.GVA_DB.Model(&model.SmartStorageDoor{})
+	db.Unscoped().Select("door_id").Order("door_id desc").First(&stemp)
+	smartStorageDoor.DoorId = stemp.DoorId + 1
 	err = global.GVA_DB.Create(&smartStorageDoor).Error
+
 	return err
 }
 
@@ -35,7 +40,7 @@ func DeleteSmartStorageDoor(smartStorageDoor model.SmartStorageDoor) (err error)
 // @return                    error
 
 func DeleteSmartStorageDoorByIds(ids request.IdsReq) (err error) {
-	err = global.GVA_DB.Delete(&[]model.SmartStorageDoor{},"id in (?)",ids.Ids).Error
+	err = global.GVA_DB.Delete(&[]model.SmartStorageDoor{}, "id in (?)", ids.Ids).Error
 	return err
 }
 
@@ -71,10 +76,10 @@ func GetSmartStorageDoor(id uint) (err error, smartStorageDoor model.SmartStorag
 func GetSmartStorageDoorInfoList(info request.SmartStorageDoorSearch) (err error, list interface{}, total int) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-    // 创建db
+	// 创建db
 	db := global.GVA_DB.Model(&model.SmartStorageDoor{})
-    var smartStorageDoors []model.SmartStorageDoor
-    // 如果有条件搜索 下方会自动创建搜索语句
+	var smartStorageDoors []model.SmartStorageDoor
+	// 如果有条件搜索 下方会自动创建搜索语句
 	err = db.Count(&total).Error
 	err = db.Limit(limit).Offset(offset).Find(&smartStorageDoors).Error
 	return err, smartStorageDoors, total

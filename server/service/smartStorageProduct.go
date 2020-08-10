@@ -35,7 +35,7 @@ func DeleteSmartStorageProduct(smartStorageProduct model.SmartStorageProduct) (e
 // @return                    error
 
 func DeleteSmartStorageProductByIds(ids request.IdsReq) (err error) {
-	err = global.GVA_DB.Delete(&[]model.SmartStorageProduct{},"id in (?)",ids.Ids).Error
+	err = global.GVA_DB.Delete(&[]model.SmartStorageProduct{}, "id in (?)", ids.Ids).Error
 	return err
 }
 
@@ -69,12 +69,16 @@ func GetSmartStorageProduct(id uint) (err error, smartStorageProduct model.Smart
 // @return                    error
 
 func GetSmartStorageProductInfoList(info request.SmartStorageProductSearch) (err error, list interface{}, total int) {
+	productName := info.ProductName
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-    // 创建db
+	// 创建db
 	db := global.GVA_DB.Model(&model.SmartStorageProduct{})
-    var smartStorageProducts []model.SmartStorageProduct
-    // 如果有条件搜索 下方会自动创建搜索语句
+	var smartStorageProducts []model.SmartStorageProduct
+	// 如果有条件搜索 下方会自动创建搜索语句
+	if productName != "" {
+		db = db.Where("product_name LIKE ?", "%"+productName+"%")
+	}
 	err = db.Count(&total).Error
 	err = db.Limit(limit).Offset(offset).Find(&smartStorageProducts).Error
 	return err, smartStorageProducts, total

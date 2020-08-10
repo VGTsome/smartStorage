@@ -1,9 +1,12 @@
 package service
 
 import (
+	"errors"
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
+	"strconv"
+	"time"
 )
 
 // @title    CreateSmartStorageOrder
@@ -15,17 +18,20 @@ import (
 func CreateSmartStorageOrder(smartStorageOrderListReq request.SmartStorageOrderListReq, userId int) (err error) {
 
 	var smartStorageOrder model.SmartStorageOrder
-	errcheck := global.GVA_DB.Where("user_id = ?", userId).Not("order_status", "10").First(&smartStorageOrder).Error
-	if errcheck != nil {
-		return errcheck
-	}
-
-	for i := 0; i < len(smartStorageOrderListReq.SmartStorageOrderList); i++ {
-		smartStorageOrderListReq.SmartStorageOrderList[i].UserId = userId
-		err = global.GVA_DB.Create(&(smartStorageOrderListReq.SmartStorageOrderList[i])).Error
-		if err != nil {
-			break
+	//errcheck := global.GVA_DB.Where("user_id = ?", userId).Not("order_status", "10").First(&smartStorageOrder).Error
+	timeUnixNano := strconv.FormatInt(time.Now().UnixNano(), 10) //单位纳秒
+	if global.GVA_DB.Where("user_id = ?", userId).Not("order_status", "10").First(&smartStorageOrder).RecordNotFound() {
+		for i := 0; i < len(smartStorageOrderListReq.SmartStorageOrderList); i++ {
+			smartStorageOrderListReq.SmartStorageOrderList[i].UserId = userId
+			smartStorageOrderListReq.SmartStorageOrderList[i].OrderId = timeUnixNano
+			err = global.GVA_DB.Create(&(smartStorageOrderListReq.SmartStorageOrderList[i])).Error
+			if err != nil {
+				break
+			}
 		}
+	} else {
+
+		return errors.New("还有未完成的订单")
 	}
 
 	return err
@@ -63,6 +69,10 @@ func UpdateSmartStorageOrder(smartStorageOrder *model.SmartStorageOrder) (err er
 	err = global.GVA_DB.Save(smartStorageOrder).Error
 	return err
 }
+func UpdateSmartStorageOrderStatus(smartStorageOrder *model.SmartStorageOrder) (err error) {
+	err = global.GVA_DB.Model(&model.SmartStorageOrder{}).Select("order_status").Update(smartStorageOrder).Error
+	return err
+}
 
 // @title    GetSmartStorageOrder
 // @description   get the info of a SmartStorageOrder
@@ -82,14 +92,37 @@ func GetSmartStorageOrder(id uint) (err error, smartStorageOrder model.SmartStor
 // @param     info            PageInfo
 // @return                    error
 
-func GetSmartStorageOrderInfoList(info request.SmartStorageOrderSearch) (err error, list interface{}, total int) {
+func GetSmartStorageOrderInfoById(info request.SmartStorageOrderSearch, userid int) (err error, list interface{}, total int) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-	// 创建db
-	db := global.GVA_DB.Model(&model.SmartStorageOrder{})
 	var smartStorageOrders []model.SmartStorageOrder
+	db := global.GVA_DB.Where("user_id = ? AND order_status != ?", userid, "10").Order("updated_at desc, order_status").Model(&model.SmartStorageOrder{})
+	// 创建db
+	//db = global.GVA_DB.Model(&smartStorageOrders).Related(&SmartStorageOrder.SmartStorageProduct, "SmartStorageProduct")
+
 	// 如果有条件搜索 下方会自动创建搜索语句
 	err = db.Count(&total).Error
 	err = db.Limit(limit).Offset(offset).Find(&smartStorageOrders).Error
+	for index, _ := range smartStorageOrders {
+		global.GVA_DB.Model(&smartStorageOrders[index]).Related(&smartStorageOrders[index].SmartStorageProduct, "SmartStorageProduct")
+	}
+	return err, smartStorageOrders, total
+}
+func GetAllOrderList(info request.SmartStorageOrderSearch) (err error, list interface{}, total int) {
+	limit := info.PageSize
+	offset := info.PageSize * (info.Page - 1)
+	var smartStorageOrders []model.SmartStorageOrder
+	db := global.GVA_DB.Order(" order_status,created_at desc").Model(&model.SmartStorageOrder{})
+	// 创建db
+	//db = global.GVA_DB.Model(&smartStorageOrders).Related(&SmartStorageOrder.SmartStorageProduct, "SmartStorageProduct")
+
+	// 如果有条件搜索 下方会自动创建搜索语句
+	err = db.Count(&total).Error
+	err = db.Limit(limit).Offset(offset).Find(&smartStorageOrders).Error
+
+	for index, _ := range smartStorageOrders {
+		global.GVA_DB.Model(&smartStorageOrders[index]).Related(&smartStorageOrders[index].SmartStorageProduct, "SmartStorageProduct")
+		global.GVA_DB.Model(&smartStorageOrders[index]).Select("nick_name").Related(&smartStorageOrders[index].SysUser, "SysUser")
+	}
 	return err, smartStorageOrders, total
 }

@@ -13,6 +13,10 @@ import (
 // @return    err             error
 
 func CreateSmartStorageCabinet(smartStorageCabinet model.SmartStorageCabinet) (err error) {
+	var stemp model.SmartStorageCabinet
+	db := global.GVA_DB.Model(&model.SmartStorageCabinet{})
+	db.Unscoped().Select("cabinet_id").Order("cabinet_id desc").First(&stemp)
+	smartStorageCabinet.CabinetId = stemp.CabinetId + 1
 	err = global.GVA_DB.Create(&smartStorageCabinet).Error
 	return err
 }
@@ -35,7 +39,7 @@ func DeleteSmartStorageCabinet(smartStorageCabinet model.SmartStorageCabinet) (e
 // @return                    error
 
 func DeleteSmartStorageCabinetByIds(ids request.IdsReq) (err error) {
-	err = global.GVA_DB.Delete(&[]model.SmartStorageCabinet{},"id in (?)",ids.Ids).Error
+	err = global.GVA_DB.Delete(&[]model.SmartStorageCabinet{}, "id in (?)", ids.Ids).Error
 	return err
 }
 
@@ -71,10 +75,10 @@ func GetSmartStorageCabinet(id uint) (err error, smartStorageCabinet model.Smart
 func GetSmartStorageCabinetInfoList(info request.SmartStorageCabinetSearch) (err error, list interface{}, total int) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-    // 创建db
+	// 创建db
 	db := global.GVA_DB.Model(&model.SmartStorageCabinet{})
-    var smartStorageCabinets []model.SmartStorageCabinet
-    // 如果有条件搜索 下方会自动创建搜索语句
+	var smartStorageCabinets []model.SmartStorageCabinet
+	// 如果有条件搜索 下方会自动创建搜索语句
 	err = db.Count(&total).Error
 	err = db.Limit(limit).Offset(offset).Find(&smartStorageCabinets).Error
 	return err, smartStorageCabinets, total
