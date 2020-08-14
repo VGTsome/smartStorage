@@ -50,16 +50,25 @@
       <el-table-column label="货柜ID"
                        prop="cabinetId"
                        width="120"></el-table-column>
+      <el-table-column label="货柜名称"
+                       prop="SmartStorageCabinet.cabinetName"
+                       width="120"></el-table-column>
 
       <el-table-column label="产品ID"
                        prop="productId"
                        width="120"></el-table-column>
-
-      <el-table-column label="状态"
-                       prop="status"
+      <el-table-column label="产品名称"
+                       prop="SmartStorageProduct.productName"
                        width="120"></el-table-column>
 
-      <el-table-column label="按钮组">
+      <el-table-column label="总重量(千克)"
+                       prop="weight"
+                       width="120"></el-table-column>
+      <el-table-column label="总数量"
+                       prop="productNumber"
+                       width="120"></el-table-column>
+
+      <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button @click="updateCabinetProduct(scope.row)"
                      size="small"
@@ -97,7 +106,51 @@
     <el-dialog :before-close="closeDialog"
                :visible.sync="dialogFormVisible"
                title="弹窗操作">
-      此处请使用表单生成器生成form填充 表单默认绑定 formData 如手动修改过请自行修改key
+      <el-form ref="elForm"
+               :model="formData"
+               :rules="rules"
+               size="medium"
+               label-width="100px">
+        <el-form-item label="货柜"
+                      prop="cabinetId">
+          <el-select v-model="formData.cabinetId"
+                     placeholder="请选择货柜"
+                     clearable
+                     :style="{width: '100%'}">
+            <el-option v-for="(item, index) in cabinetIdOptions"
+                       :key="index"
+                       :label="item.label"
+                       :value="item.value"
+                       :disabled="item.disabled"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="货品"
+                      prop="productId">
+          <el-select v-model="formData.productId"
+                     placeholder="请选择货品"
+                     clearable
+                     :style="{width: '100%'}">
+            <el-option v-for="(item, index) in productIdOptions"
+                       :key="index"
+                       :label="item.label"
+                       :value="item.value"
+                       :disabled="item.disabled"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="总重量(kg)"
+                      prop="weight">
+          <el-input-number v-model="formData.weight"
+                           placeholder="总重量(kg)"
+                           :min="0"
+                           :precision='3'></el-input-number>
+        </el-form-item>
+        <el-form-item label="总数量"
+                      prop="productNumber">
+          <el-input-number v-model="formData.productNumber"
+                           :min="0"
+                           placeholder="总数量"></el-input-number>
+        </el-form-item>
+      </el-form>
       <div class="dialog-footer"
            slot="footer">
         <el-button @click="closeDialog">取 消</el-button>
@@ -109,6 +162,8 @@
 </template>
 
 <script>
+import { getSmartStorageProductList } from '@/api/smartStorageProduct'
+import { getSmartStorageCabinetList } from '@/api/smartStorageCabinet'
 import {
   createCabinetProduct,
   deleteCabinetProduct,
@@ -134,8 +189,34 @@ export default {
       formData: {
         cabinetId: null,
         productId: null,
-        status: null,
+        weight: null,
+        productNumber: null,
       },
+      rules: {
+        cabinetId: [
+          {
+            required: true,
+            message: '请选择货柜',
+            trigger: 'change',
+          },
+        ],
+        productId: [
+          {
+            required: true,
+            message: '请选择货品',
+            trigger: 'change',
+          },
+        ],
+        weight: [
+          {
+            required: true,
+            message: '总重量(kg)',
+            trigger: 'blur',
+          },
+        ],
+      },
+      cabinetIdOptions: [],
+      productIdOptions: [],
     }
   },
   filters: {
@@ -209,34 +290,68 @@ export default {
       }
     },
     async enterDialog() {
-      let res
-      switch (this.type) {
-        case 'create':
-          res = await createCabinetProduct(this.formData)
-          break
-        case 'update':
-          res = await updateCabinetProduct(this.formData)
-          break
-        default:
-          res = await createCabinetProduct(this.formData)
-          break
-      }
-      if (res.code == 0) {
-        this.$message({
-          type: 'success',
-          message: '创建/更改成功',
-        })
-        this.closeDialog()
-        this.getTableData()
+      debugger
+      let valid2
+      await this.$refs['elForm'].validate((valid) => {
+        valid2 = valid
+        if (!valid) return
+      })
+      if (valid2) {
+        let res
+        switch (this.type) {
+          case 'create':
+            res = await createCabinetProduct(this.formData)
+            break
+          case 'update':
+            res = await updateCabinetProduct(this.formData)
+            break
+          default:
+            res = await createCabinetProduct(this.formData)
+            break
+        }
+        if (res.code == 0) {
+          this.$message({
+            type: 'success',
+            message: '创建/更改成功',
+          })
+          this.closeDialog()
+          this.getTableData()
+        }
+        this.$refs['elForm'].resetFields()
       }
     },
     openDialog() {
       this.type = 'create'
       this.dialogFormVisible = true
     },
+    async init() {
+      let res
+      res = await getSmartStorageCabinetList({ page: 1, pageSize: 100 })
+      if (res.code == 0) {
+        this.cabinetIdOptions = []
+        res.data.list.forEach((element) => {
+          this.cabinetIdOptions.push({
+            value: element.cabinetId,
+            label: element.cabinetName,
+          })
+        })
+      }
+      res = await getSmartStorageProductList({ page: 1, pageSize: 100 })
+      if (res.code == 0) {
+        this.productIdOptions = []
+        res.data.list.forEach((element) => {
+          this.productIdOptions.push({
+            value: element.productId,
+            label: element.productName,
+          })
+        })
+      }
+      await this.getTableData()
+    },
   },
+
   created() {
-    this.getTableData()
+    this.init()
   },
 }
 </script>

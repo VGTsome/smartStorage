@@ -35,7 +35,7 @@ func DeleteCabinetProduct(sscp model.CabinetProduct) (err error) {
 // @return                    error
 
 func DeleteCabinetProductByIds(ids request.IdsReq) (err error) {
-	err = global.GVA_DB.Delete(&[]model.CabinetProduct{},"id in (?)",ids.Ids).Error
+	err = global.GVA_DB.Delete(&[]model.CabinetProduct{}, "id in (?)", ids.Ids).Error
 	return err
 }
 
@@ -71,11 +71,15 @@ func GetCabinetProduct(id uint) (err error, sscp model.CabinetProduct) {
 func GetCabinetProductInfoList(info request.CabinetProductSearch) (err error, list interface{}, total int) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-    // 创建db
+	// 创建db
 	db := global.GVA_DB.Model(&model.CabinetProduct{})
-    var sscps []model.CabinetProduct
-    // 如果有条件搜索 下方会自动创建搜索语句
+	var sscps []model.CabinetProduct
+	// 如果有条件搜索 下方会自动创建搜索语句
 	err = db.Count(&total).Error
 	err = db.Limit(limit).Offset(offset).Find(&sscps).Error
+	for index, _ := range sscps {
+		global.GVA_DB.Model(&sscps[index]).Related(&sscps[index].SmartStorageProduct, "SmartStorageProduct")
+		global.GVA_DB.Model(&sscps[index]).Related(&sscps[index].SmartStorageCabinet, "SmartStorageCabinet")
+	}
 	return err, sscps, total
 }

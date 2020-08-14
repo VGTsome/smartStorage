@@ -68,7 +68,7 @@
                        width="120">
         <template slot-scope="scope"><img :src=scope.row.productNumber /></template></el-table-column>
 
-      <el-table-column label="货品数量"
+      <el-table-column label="最低报警数量"
                        prop="productNumber"
                        width="120">
       </el-table-column>
@@ -130,10 +130,9 @@
                     clearable
                     :style="{width: '100%'}"></el-input>
         </el-form-item>
-        <el-form-item label="货品重量"
+        <el-form-item label="单位重量(g)"
                       prop="productWeight">
-          <el-input-number v-model="formData.productWeight"
-                           placeholder="货品重量"></el-input-number>
+          <el-input-number v-model="formData.productWeight"></el-input-number>
         </el-form-item>
         <el-form-item label="货品描述"
                       prop="productDescription">
@@ -156,13 +155,12 @@
                      :limit="1">
             <el-button size="small"
                        type="primary"
-                       icon="el-icon-upload">点击上传</el-button>
+                       icon="el-icon-upload">点击上传图片</el-button>
           </el-upload>
         </el-form-item>
-        <el-form-item label="货品数量"
+        <el-form-item label="最低报警数量"
                       prop="filename">
-          <el-input-number v-model="formData.productNumber"
-                           placeholder="货品数量"></el-input-number>
+          <el-input-number v-model="formData.productNumber"></el-input-number>
         </el-form-item>
       </el-form>
       <div class="dialog-footer"
