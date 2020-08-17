@@ -8,7 +8,7 @@ import (
 // 如果含有time.Time 请自行import time包
 type CabinetProduct struct {
 	gorm.Model
-	CabinetId           int                 `json:"cabinetId" form:"cabinetId" gorm:"column:cabinet_id;comment:'';type:int(10)"`
+	CabinetId           int                 `json:"cabinetId" form:"cabinetId" gorm:"column:cabinet_id;comment:'';type:int(11)"`
 	SmartStorageCabinet SmartStorageCabinet `gorm:"ForeignKey:CabinetId;AssociationForeignKey:CabinetId"`
 	ProductId           string              `json:"productId" form:"productId" gorm:"column:product_id;comment:'';type:varchar(255)"`
 	SmartStorageProduct SmartStorageProduct `gorm:"ForeignKey:ProductId;AssociationForeignKey:ProductId"`

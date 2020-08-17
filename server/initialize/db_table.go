@@ -28,6 +28,7 @@ func DBTables() {
 		model.SmartStorageOrder{},
 		model.SmartStorageMonitor{},
 		model.SmartStorageProduct{},
+		model.SmartStorageQuota{},
 	)
 	global.GVA_LOG.Debug("register table success")
 }

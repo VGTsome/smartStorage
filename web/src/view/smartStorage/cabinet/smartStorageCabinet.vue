@@ -60,7 +60,7 @@
                        width="120"></el-table-column>
 
       <el-table-column label="货柜总承重"
-                       prop="cabinetTotalNumber"
+                       prop="maxWeight"
                        width="120"></el-table-column>
 
       <el-table-column label="按钮组">

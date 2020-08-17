@@ -10,7 +10,7 @@
         </el-form-item>
         <el-form-item>
           <el-button @click="openDialog"
-                     type="primary">新增货柜产品</el-button>
+                     type="primary">新增配额表</el-button>
         </el-form-item>
         <el-form-item>
           <el-popover placement="top"
@@ -47,30 +47,33 @@
         <template slot-scope="scope">{{scope.row.CreatedAt|formatDate}}</template>
       </el-table-column>
 
-      <el-table-column label="货柜ID"
-                       prop="cabinetId"
-                       width="120"></el-table-column>
-      <el-table-column label="货柜名称"
-                       prop="SmartStorageCabinet.cabinetName"
+      <el-table-column label="部门名称"
+                       prop="SysAuthority.authorityName"
                        width="120"></el-table-column>
 
-      <el-table-column label="产品ID"
-                       prop="productId"
-                       width="120"></el-table-column>
-      <el-table-column label="产品名称"
+      <el-table-column label="货品名称"
                        prop="SmartStorageProduct.productName"
                        width="120"></el-table-column>
 
-      <el-table-column label="总重量(千克)"
-                       prop="weight"
+      <el-table-column label="月配额"
+                       prop="quotaMonth"
                        width="120"></el-table-column>
-      <el-table-column label="总数量"
-                       prop="productNumber"
+
+      <el-table-column label="月已经领用"
+                       prop="usedMonth"
+                       width="120"></el-table-column>
+
+      <el-table-column label="年配额"
+                       prop="quotaYear"
+                       width="120"></el-table-column>
+
+      <el-table-column label="年已经领用"
+                       prop="usedYear"
                        width="120"></el-table-column>
 
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button @click="updateCabinetProduct(scope.row)"
+          <el-button @click="updateSmartStorageQuota(scope.row)"
                      size="small"
                      type="primary">变更</el-button>
           <el-popover placement="top"
@@ -83,7 +86,7 @@
                          @click="scope.row.visible = false">取消</el-button>
               <el-button type="primary"
                          size="mini"
-                         @click="deleteCabinetProduct(scope.row)">确定</el-button>
+                         @click="deleteSmartStorageQuota(scope.row)">确定</el-button>
             </div>
             <el-button type="danger"
                        icon="el-icon-delete"
@@ -111,13 +114,13 @@
                :rules="rules"
                size="medium"
                label-width="100px">
-        <el-form-item label="货柜"
-                      prop="cabinetId">
-          <el-select v-model="formData.cabinetId"
-                     placeholder="请选择货柜"
+        <el-form-item label="部门名"
+                      prop="authorityId">
+          <el-select v-model="formData.authorityId"
+                     placeholder="请选择部门名"
                      clearable
                      :style="{width: '100%'}">
-            <el-option v-for="(item, index) in cabinetIdOptions"
+            <el-option v-for="(item, index) in authorityIdOptions"
                        :key="index"
                        :label="item.label"
                        :value="item.value"
@@ -137,18 +140,25 @@
                        :disabled="item.disabled"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="总重量(kg)"
-                      prop="weight">
-          <el-input-number v-model="formData.weight"
-                           placeholder="总重量(kg)"
-                           :min="0"
-                           :precision='3'></el-input-number>
+        <el-form-item label="月配额"
+                      prop="quotaMonth">
+          <el-input-number v-model="formData.quotaMonth"
+                           placeholder="月配额"></el-input-number>
         </el-form-item>
-        <el-form-item label="总数量"
-                      prop="productNumber">
-          <el-input-number v-model="formData.productNumber"
-                           :min="0"
-                           placeholder="总数量"></el-input-number>
+        <el-form-item label="月已经领用"
+                      prop="usedMonth">
+          <el-input-number v-model="formData.usedMonth"
+                           placeholder="月已经领用"></el-input-number>
+        </el-form-item>
+        <el-form-item label="年配额"
+                      prop="quotaYear">
+          <el-input-number v-model="formData.quotaYear"
+                           placeholder="年配额"></el-input-number>
+        </el-form-item>
+        <el-form-item label="年已经领用"
+                      prop="usedYear">
+          <el-input-number v-model="formData.usedYear"
+                           placeholder="年已经领用"></el-input-number>
         </el-form-item>
       </el-form>
       <div class="dialog-footer"
@@ -163,40 +173,32 @@
 
 <script>
 import { getSmartStorageProductList } from '@/api/smartStorageProduct'
-import { getSmartStorageCabinetList } from '@/api/smartStorageCabinet'
+import { getAuthorityList } from '@/api/authority'
 import {
-  createCabinetProduct,
-  deleteCabinetProduct,
-  deleteCabinetProductByIds,
-  updateCabinetProduct,
-  findCabinetProduct,
-  getCabinetProductList,
-} from '@/api/cabinetProduct' //  此处请自行替换地址
+  createSmartStorageQuota,
+  deleteSmartStorageQuota,
+  deleteSmartStorageQuotaByIds,
+  updateSmartStorageQuota,
+  findSmartStorageQuota,
+  getSmartStorageQuotaList,
+} from '@/api/smartStorageQuota' //  此处请自行替换地址
 import { formatTimeToStr } from '@/utils/data'
 import infoList from '@/components/mixins/infoList'
 
 export default {
-  name: 'CabinetProduct',
+  name: 'SmartStorageQuota',
   mixins: [infoList],
   data() {
     return {
-      listApi: getCabinetProductList,
+      listApi: getSmartStorageQuotaList,
       dialogFormVisible: false,
       visible: false,
       type: '',
-      deleteVisible: false,
-      multipleSelection: [],
-      formData: {
-        cabinetId: null,
-        productId: null,
-        weight: null,
-        productNumber: null,
-      },
       rules: {
-        cabinetId: [
+        authorityId: [
           {
             required: true,
-            message: '请选择货柜',
+            message: '请选择部门名',
             trigger: 'change',
           },
         ],
@@ -207,16 +209,47 @@ export default {
             trigger: 'change',
           },
         ],
-        weight: [
+        quotaMonth: [
           {
             required: true,
-            message: '总重量(kg)',
+            message: '月配额',
+            trigger: 'blur',
+          },
+        ],
+        usedMonth: [
+          {
+            required: true,
+            message: '月已经领用',
+            trigger: 'blur',
+          },
+        ],
+        quotaYear: [
+          {
+            required: true,
+            message: '年配额',
+            trigger: 'blur',
+          },
+        ],
+        usedYear: [
+          {
+            required: true,
+            message: '年已经领用',
             trigger: 'blur',
           },
         ],
       },
-      cabinetIdOptions: [],
+      authorityIdOptions: [],
       productIdOptions: [],
+      deleteVisible: false,
+      multipleSelection: [],
+      formData: {
+        authorityId: null,
+        productId: null,
+        quotaMonth: 100,
+        usedMonth: 0,
+        quotaYear: 1000,
+        usedYear: 0,
+      },
     }
   },
   filters: {
@@ -252,7 +285,7 @@ export default {
         this.multipleSelection.map((item) => {
           ids.push(item.ID)
         })
-      const res = await deleteCabinetProductByIds({ ids })
+      const res = await deleteSmartStorageQuotaByIds({ ids })
       if (res.code == 0) {
         this.$message({
           type: 'success',
@@ -262,25 +295,28 @@ export default {
         this.getTableData()
       }
     },
-    async updateCabinetProduct(row) {
-      const res = await findCabinetProduct({ ID: row.ID })
+    async updateSmartStorageQuota(row) {
+      const res = await findSmartStorageQuota({ ID: row.ID })
       this.type = 'update'
       if (res.code == 0) {
-        this.formData = res.data.resscp
+        this.formData = res.data.ressq
         this.dialogFormVisible = true
       }
     },
     closeDialog() {
       this.dialogFormVisible = false
       this.formData = {
-        cabinetId: null,
+        authorityId: null,
         productId: null,
-        status: null,
+        quotaMonth: 100,
+        usedMonth: 0,
+        quotaYear: 1000,
+        usedYear: 0,
       }
     },
-    async deleteCabinetProduct(row) {
+    async deleteSmartStorageQuota(row) {
       this.visible = false
-      const res = await deleteCabinetProduct({ ID: row.ID })
+      const res = await deleteSmartStorageQuota({ ID: row.ID })
       if (res.code == 0) {
         this.$message({
           type: 'success',
@@ -290,35 +326,25 @@ export default {
       }
     },
     async enterDialog() {
-      debugger
-      let valid2
-      await this.$refs['elForm'].validate((valid) => {
-        valid2 = valid
-        if (!valid) return
-      })
-      if (valid2) {
-        this.formData.weight = this.formData.weight * 1000
-        let res
-        switch (this.type) {
-          case 'create':
-            res = await createCabinetProduct(this.formData)
-            break
-          case 'update':
-            res = await updateCabinetProduct(this.formData)
-            break
-          default:
-            res = await createCabinetProduct(this.formData)
-            break
-        }
-        if (res.code == 0) {
-          this.$message({
-            type: 'success',
-            message: '创建/更改成功',
-          })
-          this.closeDialog()
-          this.getTableData()
-        }
-        this.$refs['elForm'].resetFields()
+      let res
+      switch (this.type) {
+        case 'create':
+          res = await createSmartStorageQuota(this.formData)
+          break
+        case 'update':
+          res = await updateSmartStorageQuota(this.formData)
+          break
+        default:
+          res = await createSmartStorageQuota(this.formData)
+          break
+      }
+      if (res.code == 0) {
+        this.$message({
+          type: 'success',
+          message: '创建/更改成功',
+        })
+        this.closeDialog()
+        this.getTableData()
       }
     },
     openDialog() {
@@ -327,13 +353,13 @@ export default {
     },
     async init() {
       let res
-      res = await getSmartStorageCabinetList({ page: 1, pageSize: 100 })
+      res = await getAuthorityList({ page: 1, pageSize: 100 })
       if (res.code == 0) {
-        this.cabinetIdOptions = []
+        this.authorityIdOptions = []
         res.data.list.forEach((element) => {
-          this.cabinetIdOptions.push({
-            value: element.cabinetId,
-            label: element.cabinetName,
+          this.authorityIdOptions.push({
+            value: element.authorityId,
+            label: element.authorityName,
           })
         })
       }
@@ -350,7 +376,6 @@ export default {
       await this.getTableData()
     },
   },
-
   created() {
     this.init()
   },

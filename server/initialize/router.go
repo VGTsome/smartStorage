@@ -47,6 +47,7 @@ func Routers() *gin.Engine {
 	router.InitSmartStorageDoorRouter(ApiGroup)      //门禁表
 	router.InitSmartStorageMonitorRouter(ApiGroup)   //摄像头表
 	router.InitSmartStorageOrderRouter(ApiGroup)     //订单表
+	router.InitSmartStorageQuotaRouter(ApiGroup)     //配额表
 	global.GVA_LOG.Info("router register success")
 	return Router
 }
