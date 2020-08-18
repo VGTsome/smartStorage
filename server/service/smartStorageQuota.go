@@ -69,6 +69,13 @@ func GetSmartStorageQuota(id uint) (err error, ssq model.SmartStorageQuota) {
 // @return                    error
 
 func GetSmartStorageQuotaInfoList(info request.SmartStorageQuotaSearch) (err error, list interface{}, total int) {
+	// url := "http://localhost:8080/api/authority/getAuthorityList"
+	// r, err := utils.Post(url, utils.Param{"page": 1, "pageSize": 100}, true)
+	// if err == nil {
+	// 	r.Dump()
+	// 	fmt.Println("----------------------------------------------------")
+	// 	fmt.Println("body:", r.Body)
+	// }
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	// 创建db

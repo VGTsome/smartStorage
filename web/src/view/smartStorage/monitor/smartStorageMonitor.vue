@@ -51,8 +51,8 @@
                        prop="orderId"
                        width="120"></el-table-column>
 
-      <el-table-column label="监控ID"
-                       prop="monitorId"
+      <el-table-column label="货柜ID"
+                       prop="cabinetId"
                        width="120"></el-table-column>
 
       <el-table-column label="监控图片"
@@ -61,6 +61,12 @@
 
       <el-table-column label="物品个数"
                        prop="itemNumber"
+                       width="120"></el-table-column>
+      <el-table-column label="货物重量"
+                       prop="productWeight"
+                       width="120"></el-table-column>
+      <el-table-column label="订单状态"
+                       prop="orderStatus"
                        width="120"></el-table-column>
 
       <el-table-column label="操作">
@@ -101,7 +107,48 @@
     <el-dialog :before-close="closeDialog"
                :visible.sync="dialogFormVisible"
                title="弹窗操作">
-      此处请使用表单生成器生成form填充 表单默认绑定 formData 如手动修改过请自行修改key
+      <el-form ref="elForm"
+               :model="formData"
+               :rules="rules"
+               size="medium"
+               label-width="100px">
+        <el-form-item label="订单编号"
+                      prop="orderId">
+          <el-input v-model="formData.orderId"
+                    placeholder="请输入监控图像"
+                    clearable
+                    :style="{width: '100%'}">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="货柜编号"
+                      prop="cabinetId">
+          <el-input-number v-model="formData.cabinetId"
+                           placeholder="货柜编号"></el-input-number>
+        </el-form-item>
+        <el-form-item label="监控图像"
+                      prop="monitorImg">
+          <el-input v-model="formData.monitorImg"
+                    placeholder="请输入监控图像"
+                    clearable
+                    :style="{width: '100%'}">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="货物数量"
+                      prop="itemNumber">
+          <el-input-number v-model="formData.itemNumber"
+                           placeholder="货物数量"></el-input-number>
+        </el-form-item>
+        <el-form-item label="货物重量"
+                      prop="productWeight">
+          <el-input-number v-model="formData.productWeight"
+                           placeholder="货物重量"></el-input-number>
+        </el-form-item>
+        <el-form-item label="订单状态"
+                      prop="orderStatus">
+          <el-input-number v-model="formData.orderStatus"
+                           placeholder="订单状态"></el-input-number>
+        </el-form-item>
+      </el-form>
       <div class="dialog-footer"
            slot="footer">
         <el-button @click="closeDialog">取 消</el-button>
@@ -137,8 +184,10 @@ export default {
       multipleSelection: [],
       formData: {
         orderId: null,
-        monitorId: null,
+        cabinetId: null,
         monitorImg: null,
+        itemNumber: null,
+        productWeight: null,
         orderStatus: null,
       },
     }
@@ -198,8 +247,10 @@ export default {
       this.dialogFormVisible = false
       this.formData = {
         orderId: null,
-        monitorId: null,
+        cabinetId: null,
         monitorImg: null,
+        itemNumber: null,
+        productWeight: null,
         orderStatus: null,
       }
     },
