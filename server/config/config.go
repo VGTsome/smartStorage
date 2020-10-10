@@ -13,11 +13,13 @@ type Server struct {
 }
 
 type System struct {
-	UseMultipoint bool   `mapstructure:"use-multipoint" json:"useMultipoint" yaml:"use-multipoint"`
-	Env           string `mapstructure:"env" json:"env" yaml:"env"`
-	Addr          int    `mapstructure:"addr" json:"addr" yaml:"addr"`
-	DbType        string `mapstructure:"db-type" json:"dbType" yaml:"db-type"`
-	RooturlPrefix string `mapstructure:"rooturl-prefix" json:"rooturl-prefix" yaml:"rooturl-prefix"`
+	UseMultipoint   bool   `mapstructure:"use-multipoint" json:"useMultipoint" yaml:"use-multipoint"`
+	Env             string `mapstructure:"env" json:"env" yaml:"env"`
+	Addr            int    `mapstructure:"addr" json:"addr" yaml:"addr"`
+	DbType          string `mapstructure:"db-type" json:"dbType" yaml:"db-type"`
+	RooturlPrefix   string `mapstructure:"rooturl-prefix" json:"rooturl-prefix" yaml:"rooturl-prefix"`
+	ImgUrlPrefix    string `mapstructure:"img-url-prefix" json:"img-url-prefix" yaml:"img-url-prefix"`
+	AvatarUrlPrefix string `mapstructure:"avatar-url-prefix" json:"avatar-url-prefix" yaml:"avatar-url-prefix"`
 }
 
 type JWT struct {

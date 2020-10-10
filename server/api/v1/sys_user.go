@@ -196,12 +196,12 @@ func UploadHeaderImg(c *gin.Context) {
 		response.FailWithMessage(fmt.Sprintf("上传文件失败，%v", err), c)
 	} else {
 		// 文件上传后拿到文件路径
-		err, filePath, _ := utils.UploadLocal(header, c, "fileDir/avatar/")
+		err, filepath, _ := utils.UploadLocal(header, c, global.GVA_CONFIG.System.AvatarUrlPrefix)
 		if err != nil {
 			response.FailWithMessage(fmt.Sprintf("接收返回值失败，%v", err), c)
 		} else {
 			// 修改数据库后得到修改后的user并且返回供前端使用
-			err, user := service.UploadHeaderImg(uuid, filePath)
+			err, user := service.UploadHeaderImg(uuid, filepath)
 			if err != nil {
 				response.FailWithMessage(fmt.Sprintf("修改数据库链接失败，%v", err), c)
 			} else {

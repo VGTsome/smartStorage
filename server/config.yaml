@@ -47,6 +47,8 @@ system:
     addr: 8888
     db-type: 'mysql' # support mysql/sqlite
     rooturl-prefix: http://tools.softcx.cn/nielsen/xsbz/
+    img-url-prefix: fileDir/software/
+    avatar-url-prefix: fileDir/avatar/
 
 # captcha configuration
 captcha:

@@ -297,7 +297,7 @@ export default {
         if (!valid) return
       })
       if (valid2) {
-        this.formData.weight = this.formData.weight * 1000
+        this.formData.weight = this.formData.weight
         let res
         switch (this.type) {
           case 'create':

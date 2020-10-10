@@ -2,6 +2,7 @@ package v1
 
 import (
 	"fmt"
+	"gin-vue-admin/global"
 	"gin-vue-admin/global/response"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
@@ -30,7 +31,7 @@ func UploadFile(c *gin.Context) {
 	} else {
 		// 文件上传后拿到文件路径
 
-		err, filePath, key := utils.UploadLocal(header, c, "fileDir/software/")
+		err, filePath, key := utils.UploadLocal(header, c, global.GVA_CONFIG.System.ImgUrlPrefix)
 
 		if err != nil {
 			response.FailWithMessage(fmt.Sprintf("接收返回值失败，%v", err), c)
