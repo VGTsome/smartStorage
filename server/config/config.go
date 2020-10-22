@@ -20,6 +20,7 @@ type System struct {
 	RooturlPrefix   string `mapstructure:"rooturl-prefix" json:"rooturl-prefix" yaml:"rooturl-prefix"`
 	ImgUrlPrefix    string `mapstructure:"img-url-prefix" json:"img-url-prefix" yaml:"img-url-prefix"`
 	AvatarUrlPrefix string `mapstructure:"avatar-url-prefix" json:"avatar-url-prefix" yaml:"avatar-url-prefix"`
+	ComIPaddr       string `mapstructure:"com-ipaddr" json:"com-ipaddr" yaml:"com-ipaddr"`
 }
 
 type JWT struct {

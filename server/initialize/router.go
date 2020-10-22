@@ -50,6 +50,7 @@ func Routers() *gin.Engine {
 	router.InitSmartStorageQuotaRouter(ApiGroup)      //配额表
 	router.InitSmartStorageWeightLogRouter(ApiGroup)  //重量记录表
 	router.InitSmartStoragePassWeightRouter(ApiGroup) //进门重量记录
+	router.InitSmartStorageComReceiveRouter(ApiGroup) //com入口
 	global.GVA_LOG.Info("router register success")
 	return Router
 }

@@ -49,6 +49,7 @@ system:
     rooturl-prefix: http://tools.softcx.cn/nielsen/xsbz/
     img-url-prefix: fileDir/software/
     avatar-url-prefix: fileDir/avatar/
+    com-ipaddr: 127.0.0.1:1500
 
 # captcha configuration
 captcha:
