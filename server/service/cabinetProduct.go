@@ -61,6 +61,12 @@ func GetCabinetProduct(id uint) (err error, sscp model.CabinetProduct) {
 	err = global.GVA_DB.Where("id = ?", id).First(&sscp).Error
 	return
 }
+func GetCabinetProductByCabinetName(cabinetName string) (err error, sscp model.CabinetProduct) {
+	var ssc model.SmartStorageCabinet
+	err = global.GVA_DB.Where("cabinet_name = ?", cabinetName).First(&ssc).Error
+	err = global.GVA_DB.Where("cabinet_id = ?", ssc.CabinetId).First(&sscp).Error
+	return
+}
 
 // @title    GetCabinetProductInfoList
 // @description   get CabinetProduct list by pagination, 分页获取用户列表

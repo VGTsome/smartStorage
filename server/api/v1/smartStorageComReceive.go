@@ -2,13 +2,12 @@ package v1
 
 import (
 	"fmt"
-	"gin-vue-admin/global"
+	"gin-vue-admin/comlogic"
 	"gin-vue-admin/global/response"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
 	resp "gin-vue-admin/model/response"
 	"gin-vue-admin/service"
-	"gin-vue-admin/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,8 +24,8 @@ func CreateSmartStorageComReceive(c *gin.Context) {
 	var smartStorageComReceive model.SmartStorageComReceive
 	_ = c.ShouldBindJSON(&smartStorageComReceive)
 
-	utils.GetData("http://" + global.GVA_CONFIG.System.ComIPaddr + "/Service?comname=COM1&command=bf%20aa%20d4%20b4%20b5%20e7%20d7%20d3%20cd%20f8%203a%2077%2077%2077%202e%206f%2070%2065%206e%2065%2064%2076%202e%2063%206f%206d%200d%200a")
-	_ = utils.NumberToHexstring(256)
+	comlogic.CmdRoute(smartStorageComReceive.Com, smartStorageComReceive.Command)
+
 	err := service.CreateSmartStorageComReceive(smartStorageComReceive)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("创建失败，%v", err), c)

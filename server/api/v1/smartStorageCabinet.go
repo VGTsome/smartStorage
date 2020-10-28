@@ -7,6 +7,7 @@ import (
 	"gin-vue-admin/model/request"
 	resp "gin-vue-admin/model/response"
 	"gin-vue-admin/service"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -58,7 +59,7 @@ func DeleteSmartStorageCabinet(c *gin.Context) {
 // @Router /smartStorageCabinet/deleteSmartStorageCabinetByIds [delete]
 func DeleteSmartStorageCabinetByIds(c *gin.Context) {
 	var IDS request.IdsReq
-    _ = c.ShouldBindJSON(&IDS)
+	_ = c.ShouldBindJSON(&IDS)
 	err := service.DeleteSmartStorageCabinetByIds(IDS)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("删除失败，%v", err), c)

@@ -31,6 +31,10 @@
                        type="danger">批量删除</el-button>
           </el-popover>
         </el-form-item>
+        <el-form-item>
+          <el-button @click="updateAll"
+                     type="primary">全部更新</el-button>
+        </el-form-item>
       </el-form>
     </div>
     <el-table :data="tableData"
@@ -72,7 +76,7 @@
         <template slot-scope="scope">
           <el-button @click="updateCabinetProduct(scope.row)"
                      size="small"
-                     type="primary">变更</el-button>
+                     type="primary">配置</el-button>
           <el-popover placement="top"
                       width="160"
                       v-model="scope.row.visible">
@@ -141,6 +145,7 @@
                       prop="weight">
           <el-input-number v-model="formData.weight"
                            placeholder="总重量(kg)"
+                           disabled="1"
                            :min="0"
                            :precision='3'></el-input-number>
         </el-form-item>
@@ -241,6 +246,11 @@ export default {
     onSubmit() {
       this.page = 1
       this.pageSize = 10
+      this.getTableData()
+    },
+    updateAll() {
+      this.page = 1
+      this.pageSize = 999
       this.getTableData()
     },
     handleSelectionChange(val) {

@@ -61,6 +61,10 @@ func GetSmartStorageProduct(id uint) (err error, smartStorageProduct model.Smart
 	err = global.GVA_DB.Where("id = ?", id).First(&smartStorageProduct).Error
 	return
 }
+func GetSmartStorageProductByProductId(productId string) (err error, smartStorageProduct model.SmartStorageProduct) {
+	err = global.GVA_DB.Where("productId = ?", productId).First(&smartStorageProduct).Error
+	return
+}
 
 // @title    GetSmartStorageProductInfoList
 // @description   get SmartStorageProduct list by pagination, 分页获取用户列表

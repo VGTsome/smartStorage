@@ -66,6 +66,11 @@ func GetSmartStorageCabinet(id uint) (err error, smartStorageCabinet model.Smart
 	return
 }
 
+func GetSmartStorageCabinetByCabinetID(cabinetID int) (err error, smartStorageCabinet model.SmartStorageCabinet) {
+	err = global.GVA_DB.Where("cabinet_id = ?", cabinetID).First(&smartStorageCabinet).Error
+	return
+}
+
 // @title    GetSmartStorageCabinetInfoList
 // @description   get SmartStorageCabinet list by pagination, 分页获取用户列表
 // @auth                     （2020/04/05  20:22）

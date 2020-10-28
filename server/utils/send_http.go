@@ -147,9 +147,11 @@ func Put(url string, params Param, isJSON bool) (rest *httpRequest, err error) {
 func Delete(url string, params Param, isJSON bool) (rest *httpRequest, err error) {
 	return req.delete(url, params, isJSON)
 }
-func GetData(url string) (body string, err error) {
+func GetData(urlstr string) (body string, err error) {
 	client := &http.Client{}
-	resp, err := client.Get(url)
+
+	resp, err := client.Get(urlstr)
+
 	defer resp.Body.Close()
 	bodybyte, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

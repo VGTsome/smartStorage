@@ -2,11 +2,13 @@ package v1
 
 import (
 	"fmt"
+	"gin-vue-admin/comlogic"
 	"gin-vue-admin/global/response"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
 	resp "gin-vue-admin/model/response"
 	"gin-vue-admin/service"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -58,7 +60,7 @@ func DeleteCabinetProduct(c *gin.Context) {
 // @Router /sscp/deleteCabinetProductByIds [delete]
 func DeleteCabinetProductByIds(c *gin.Context) {
 	var IDS request.IdsReq
-    _ = c.ShouldBindJSON(&IDS)
+	_ = c.ShouldBindJSON(&IDS)
 	err := service.DeleteCabinetProductByIds(IDS)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("删除失败，%v", err), c)
@@ -78,6 +80,23 @@ func DeleteCabinetProductByIds(c *gin.Context) {
 func UpdateCabinetProduct(c *gin.Context) {
 	var sscp model.CabinetProduct
 	_ = c.ShouldBindJSON(&sscp)
+
+	err1, ssc := service.GetSmartStorageCabinetByCabinetID(sscp.CabinetId)
+	if err1 != nil {
+		response.FailWithMessage(fmt.Sprintf("更新失败，%v", err1), c)
+		return
+	} else {
+		//清零
+		if sscp.ProductNumber == 0 {
+			comlogic.SetZero(ssc.CabinetName)
+
+		} else {
+			//初始化
+			comlogic.InitProduct(ssc.CabinetName, sscp.ProductNumber)
+
+		}
+	}
+
 	err := service.UpdateCabinetProduct(&sscp)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("更新失败，%v", err), c)
@@ -116,6 +135,12 @@ func FindCabinetProduct(c *gin.Context) {
 func GetCabinetProductList(c *gin.Context) {
 	var pageInfo request.CabinetProductSearch
 	_ = c.ShouldBindQuery(&pageInfo)
+	//更新数量和单位重量
+	if pageInfo.PageSize == 999 {
+		pageInfo.PageSize = 10
+		comlogic.UpdateAllProd()
+
+	}
 	err, list, total := service.GetCabinetProductInfoList(pageInfo)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取数据失败，%v", err), c)
