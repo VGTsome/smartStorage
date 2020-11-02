@@ -49,15 +49,15 @@
 
       <el-table-column label="货品编码"
                        prop="productId"
-                       width="120"></el-table-column>
+                       width="100"></el-table-column>
 
       <el-table-column label="货品名称"
                        prop="productName"
-                       width="120"></el-table-column>
+                       width="100"></el-table-column>
 
-      <el-table-column label="单位重量（g）"
+      <el-table-column label="单位重量"
                        prop="productWeight"
-                       width="120"></el-table-column>
+                       width="100"></el-table-column>
 
       <el-table-column label="货品描述"
                        prop="productDescription"
@@ -65,12 +65,17 @@
 
       <el-table-column label="图片"
                        prop="productImgUrl"
-                       width="120">
-        <template slot-scope="scope"><img :src=scope.row.productNumber /></template></el-table-column>
+                       width="100">
+        <template slot-scope="scope"><img :src=scope.row.productImgUrl /></template>
+      </el-table-column>
 
-      <el-table-column label="最低报警数量"
+      <el-table-column label="满包装数量"
                        prop="productNumber"
-                       width="120">
+                       width="100">
+      </el-table-column>
+      <el-table-column label="包装重量"
+                       prop="packageWeight"
+                       width="100">
       </el-table-column>
 
       <el-table-column label="操作">
@@ -158,9 +163,13 @@
                        icon="el-icon-upload">点击上传图片</el-button>
           </el-upload>
         </el-form-item>
-        <el-form-item label="最低报警数量"
-                      prop="filename">
+        <el-form-item label="满包装数量"
+                      prop="productNumber">
           <el-input-number v-model="formData.productNumber"></el-input-number>
+        </el-form-item>
+        <el-form-item label="包装重量"
+                      prop="packageWeight">
+          <el-input-number v-model="formData.packageWeight"></el-input-number>
         </el-form-item>
       </el-form>
       <div class="dialog-footer"
@@ -214,6 +223,7 @@ export default {
         productDescription: null,
         productImgUrl: null,
         productNumber: null,
+        packageWeight: null,
       },
       rules: {
         productId: [
@@ -245,6 +255,7 @@ export default {
           },
         ],
         productNumber: [],
+        packageWeight: [],
       },
 
       productImgAction: path + '/fileUploadAndDownload/upload',

@@ -14,6 +14,7 @@ type SmartStorageProduct struct {
 	ProductDescription string `json:"productDescription" form:"productDescription" gorm:"column:product_description;comment:'';type:varchar(1000)"`
 	ProductImgUrl      string `json:"productImgUrl" form:"productImgUrl" gorm:"column:product_img_url;comment:'';type:varchar(1000)"`
 	ProductNumber      int    `json:"productNumber" form:"productNumber" gorm:"column:product_number;comment:'';type:int(11)"`
+	PackageWeight      int    `json:"packageWeight" form:"packageWeight" gorm:"column:package_weight;comment:'';type:int(11)"`
 }
 
 func (SmartStorageProduct) TableName() string {

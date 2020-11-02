@@ -74,6 +74,21 @@ func GetCabinetProductByCabinetName(cabinetName string) (err error, sscp model.C
 // @param     info            PageInfo
 // @return                    error
 
+func GetCabinetProductList(info request.CabinetProductSearch) (err error, sscps []model.CabinetProduct, total int) {
+	limit := info.PageSize
+	offset := info.PageSize * (info.Page - 1)
+	// 创建db
+	db := global.GVA_DB.Model(&model.CabinetProduct{})
+
+	// 如果有条件搜索 下方会自动创建搜索语句
+	err = db.Count(&total).Error
+	err = db.Limit(limit).Offset(offset).Find(&sscps).Error
+	for index, _ := range sscps {
+		global.GVA_DB.Model(&sscps[index]).Related(&sscps[index].SmartStorageProduct, "SmartStorageProduct")
+		global.GVA_DB.Model(&sscps[index]).Related(&sscps[index].SmartStorageCabinet, "SmartStorageCabinet")
+	}
+	return err, sscps, total
+}
 func GetCabinetProductInfoList(info request.CabinetProductSearch) (err error, list interface{}, total int) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)

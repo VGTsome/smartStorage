@@ -43,12 +43,28 @@ func cabinetMinus30(cabinetNum string) string {
 }
 
 func buildWholeCmd(command string) string {
-
-	return "02 " + addCheckSum(strings.Trim(command, " ")) + " 03"
+	command = addCheckSum(strings.Trim(command, " ")) + " "
+	cmdlen := len(command) / 3
+	cmdlen += 2
+	cmdlenstr := hexAddPreZero(intToHexString(cmdlen), 2)
+	return "02 " + cmdlenstr + command + " 03"
 }
-
+func RemoveReplicaSliceString(slc []string) []string {
+	/*
+	   slice(string类型)元素去重
+	*/
+	result := make([]string, 0)
+	tempMap := make(map[string]bool, len(slc))
+	for _, e := range slc {
+		if tempMap[e] == false {
+			tempMap[e] = true
+			result = append(result, e)
+		}
+	}
+	return result
+}
 func hexAddPreZero(hexstr string, zeroGroup int) string {
-	hexstr = "000000000000" + hexstr
+	hexstr = "000000000000000000" + hexstr
 	rethex := ""
 	for i := zeroGroup; i >= 1; i-- {
 		rethex += " " + hexstr[len(hexstr)-i*2:len(hexstr)-2*(i-1)]
@@ -63,9 +79,9 @@ func addCheckSum(command string) (addCheck string) {
 	for i := 1; i < len(commandlist); i++ {
 		total += hexstringToNumber(commandlist[i])
 	}
-	totalstr := strconv.Itoa(total)
-	hexstr := intStringToHexstring(totalstr)
 
-	addCheck = command + hexAddPreZero(hexstr, 2)
+	hexstr := intToHexString(total)
+
+	addCheck = command + hexAddPreZero(hexstr, 4)
 	return addCheck
 }

@@ -88,3 +88,14 @@ func GetSmartStorageCabinetInfoList(info request.SmartStorageCabinetSearch) (err
 	err = db.Limit(limit).Offset(offset).Find(&smartStorageCabinets).Error
 	return err, smartStorageCabinets, total
 }
+
+func GetSmartStorageCabinetList() (err error, list []model.SmartStorageCabinet, total int) {
+
+	// 创建db
+	db := global.GVA_DB.Model(&model.SmartStorageCabinet{})
+	var smartStorageCabinets []model.SmartStorageCabinet
+	// 如果有条件搜索 下方会自动创建搜索语句
+	err = db.Count(&total).Error
+	err = db.Find(&smartStorageCabinets).Error
+	return err, smartStorageCabinets, total
+}

@@ -137,9 +137,9 @@ func GetCabinetProductList(c *gin.Context) {
 	_ = c.ShouldBindQuery(&pageInfo)
 	//更新数量和单位重量
 	if pageInfo.PageSize == 999 {
+		//更新货架
+		comlogic.UpdateAllProd("01")
 		pageInfo.PageSize = 10
-		comlogic.UpdateAllProd()
-
 	}
 	err, list, total := service.GetCabinetProductInfoList(pageInfo)
 	if err != nil {
