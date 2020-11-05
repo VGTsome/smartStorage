@@ -6,6 +6,44 @@ import (
 	"strings"
 )
 
+var comdict = map[string]string{
+	"COM1": "cabinet",
+	"COM2": "door",
+}
+
+//CmdRoute 上行命令路由
+func CmdRoute(com string, upcmd string) {
+	command := strings.Split(upcmd, " ")
+	switch comdict[com] {
+	case "cabinet":
+		//标零
+		if command[2] == "37" {
+
+			upSetZero(com, command)
+		}
+		//查重
+		if command[2] == "36" {
+			//设置第一个货物
+			if command[11] == "A1" {
+				upSetFirstProd(com, command)
+			}
+		}
+		//设置货品参数
+		if command[2] == "42" {
+			upSetSingWeight(com, command)
+		}
+		if command[2] == "31" {
+			if command[len(command)-5] == "01" {
+				upUpdateCabinetProduct(com, command)
+			}
+		}
+		break
+	case "door":
+
+		break
+
+	}
+}
 func intToHexString(ten int) string {
 	i := int64(ten)
 	s := strconv.FormatInt(i, 16)

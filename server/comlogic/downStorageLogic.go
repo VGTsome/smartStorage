@@ -68,7 +68,7 @@ func downSetProductInfo(cabinetName string, singleWeight int) {
 
 }
 
-//获取所有货物数量
+//UpdateAllProd 获取所有货物数量
 //更新货物库存 保留位01
 //进门前盘货 保留位02
 //出门前盘货 保留位03
@@ -92,5 +92,3 @@ func UpdateAllProd(reserv string) {
 	}
 
 }
-
-func GetAllProductNumber() {}

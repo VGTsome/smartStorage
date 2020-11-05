@@ -85,6 +85,14 @@ func GetSmartStorageOrder(id uint) (err error, smartStorageOrder model.SmartStor
 	err = global.GVA_DB.Where("id = ?", id).First(&smartStorageOrder).Error
 	return
 }
+func GetSmartStorageOrderByOrderID(orderId string) (err error, smartStorageOrders []model.SmartStorageOrder) {
+	err = global.GVA_DB.Where("order_id = ?", orderId).Find(&smartStorageOrders).Error
+	return
+}
+func GetSmartStorageOrderByOrderIDProductId(orderId string, productID string) (err error, smartStorageOrder model.SmartStorageOrder) {
+	err = global.GVA_DB.Where("order_id = ? AND product_id = ?", orderId, productID).Find(&smartStorageOrder).Error
+	return
+}
 
 // @title    GetSmartStorageOrderInfoList
 // @description   get SmartStorageOrder list by pagination, 分页获取用户列表

@@ -67,6 +67,11 @@ func GetCabinetProductByCabinetName(cabinetName string) (err error, sscp model.C
 	err = global.GVA_DB.Where("cabinet_id = ?", ssc.CabinetId).First(&sscp).Error
 	return
 }
+func GetCabinetProductByProductId(productId string) (err error, sscp model.CabinetProduct) {
+
+	err = global.GVA_DB.Where("product_id = ?", productId).First(&sscp).Error
+	return
+}
 
 // @title    GetCabinetProductInfoList
 // @description   get CabinetProduct list by pagination, 分页获取用户列表
@@ -87,6 +92,14 @@ func GetCabinetProductList(info request.CabinetProductSearch) (err error, sscps 
 		global.GVA_DB.Model(&sscps[index]).Related(&sscps[index].SmartStorageProduct, "SmartStorageProduct")
 		global.GVA_DB.Model(&sscps[index]).Related(&sscps[index].SmartStorageCabinet, "SmartStorageCabinet")
 	}
+	return err, sscps, total
+}
+func GetAllCabinetProductList() (err error, sscps []model.CabinetProduct, total int) {
+	db := global.GVA_DB.Model(&model.CabinetProduct{})
+
+	// 如果有条件搜索 下方会自动创建搜索语句
+	err = db.Count(&total).Error
+	err = db.Find(&sscps).Error
 	return err, sscps, total
 }
 func GetCabinetProductInfoList(info request.CabinetProductSearch) (err error, list interface{}, total int) {

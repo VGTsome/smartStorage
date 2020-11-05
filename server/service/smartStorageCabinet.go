@@ -99,3 +99,14 @@ func GetSmartStorageCabinetList() (err error, list []model.SmartStorageCabinet, 
 	err = db.Find(&smartStorageCabinets).Error
 	return err, smartStorageCabinets, total
 }
+
+func GetSmartStorageCabinetListByShelf(com string, shelf string) (err error, list []model.SmartStorageCabinet, total int) {
+
+	// 创建db
+	db := global.GVA_DB.Model(&model.SmartStorageCabinet{})
+	var smartStorageCabinets []model.SmartStorageCabinet
+	// 如果有条件搜索 下方会自动创建搜索语句
+	err = db.Count(&total).Error
+	err = db.Where("cabinet_name LIKE ?", com+"-"+shelf+"-%").Find(&smartStorageCabinets).Error
+	return err, smartStorageCabinets, total
+}

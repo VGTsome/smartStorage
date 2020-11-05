@@ -6,6 +6,7 @@ import (
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
 	"gin-vue-admin/utils"
+
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -116,4 +117,11 @@ func UploadHeaderImg(uuid uuid.UUID, filePath string) (err error, userInter *mod
 	var user model.SysUser
 	err = global.GVA_DB.Where("uuid = ?", uuid).First(&user).Update("header_img", filePath).First(&user).Error
 	return err, &user
+}
+
+//GetUserByScanID 根据scanID获取用户信息
+func GetUserByScanID(scanID string) (err error, user model.SysUser) {
+
+	err = global.GVA_DB.Where("scan_id = ?", scanID).First(&user).Error
+	return err, user
 }
