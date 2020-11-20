@@ -24,7 +24,7 @@ func CreateSmartStorageProduct(smartStorageProduct model.SmartStorageProduct) (e
 // @return                    error
 
 func DeleteSmartStorageProduct(smartStorageProduct model.SmartStorageProduct) (err error) {
-	err = global.GVA_DB.Delete(smartStorageProduct).Error
+	err = global.GVA_DB.Unscoped().Delete(smartStorageProduct).Error
 	return err
 }
 
@@ -35,7 +35,7 @@ func DeleteSmartStorageProduct(smartStorageProduct model.SmartStorageProduct) (e
 // @return                    error
 
 func DeleteSmartStorageProductByIds(ids request.IdsReq) (err error) {
-	err = global.GVA_DB.Delete(&[]model.SmartStorageProduct{}, "id in (?)", ids.Ids).Error
+	err = global.GVA_DB.Unscoped().Delete(&[]model.SmartStorageProduct{}, "id in (?)", ids.Ids).Error
 	return err
 }
 
@@ -76,14 +76,36 @@ func GetSmartStorageProductInfoList(info request.SmartStorageProductSearch) (err
 	productName := info.ProductName
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-	// 创建db
-	db := global.GVA_DB.Model(&model.SmartStorageProduct{})
 	var smartStorageProducts []model.SmartStorageProduct
+	// var cabinetProducts []model.CabinetProduct
+	// 创建db
+	//db := global.GVA_DB.Model(&model.CabinetProduct{}).Find(&cabinetProducts)
+
+	db := global.GVA_DB.Model(&model.SmartStorageProduct{})
+
 	// 如果有条件搜索 下方会自动创建搜索语句
 	if productName != "" {
 		db = db.Where("product_name LIKE ?", "%"+productName+"%")
 	}
 	err = db.Count(&total).Error
+
 	err = db.Limit(limit).Offset(offset).Find(&smartStorageProducts).Error
+
+	return err, smartStorageProducts, total
+}
+
+func GetSmartStorageProductInfoValidList(info request.SmartStorageProductSearch) (err error, list interface{}, total int) {
+	productName := info.ProductName
+	limit := info.PageSize
+	offset := info.PageSize * (info.Page - 1)
+	var smartStorageProducts []model.SmartStorageProduct
+	whereStr := ""
+	if productName != "" {
+		whereStr = "WHERE p.product_name='" + productName + "'"
+	}
+	// 创建db
+	err = global.GVA_DB.Raw("SELECT p.* FROM `smart_storage_product` p  JOIN smart_storage_cabinet_product cp on p.product_id=cp.product_id  "+whereStr+" LIMIT ?,?", offset, limit).Count(&total).Error
+	err = global.GVA_DB.Raw("SELECT p.* FROM `smart_storage_product` p  JOIN smart_storage_cabinet_product cp on p.product_id=cp.product_id  "+whereStr+" LIMIT ?,?", offset, limit).Scan(&smartStorageProducts).Error
+
 	return err, smartStorageProducts, total
 }

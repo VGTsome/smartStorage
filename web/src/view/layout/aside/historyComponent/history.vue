@@ -1,23 +1,21 @@
 <template>
   <div class="router-history">
-    <el-tabs
-      :closable="!(historys.length==1&&this.$route.name=='dashboard')"
-      @contextmenu.prevent.native="openContextMenu($event)"
-      @tab-click="changeTab"
-      @tab-remove="removeTab"
-      type="card"
-      v-model="activeValue"
-    >
-      <el-tab-pane
-        :key="item.name"
-        :label="item.meta.title"
-        :name="item.name"
-        v-for="item in historys"
-      ></el-tab-pane>
+    <el-tabs :closable="!(historys.length==1&&this.$route.name=='dashboard')"
+             @contextmenu.prevent.native="openContextMenu($event)"
+             @tab-click="changeTab"
+             @tab-remove="removeTab"
+             type="card"
+             v-model="activeValue">
+      <el-tab-pane :key="item.name"
+                   :label="item.meta.title"
+                   :name="item.name"
+                   v-for="item in historys"></el-tab-pane>
     </el-tabs>
 
     <!--自定义右键菜单html代码-->
-    <ul :style="{left:left+'px',top:top+'px'}" class="contextmenu" v-show="contextMenuVisible">
+    <ul :style="{left:left+'px',top:top+'px'}"
+        class="contextmenu"
+        v-show="contextMenuVisible">
       <li @click="closeAll">关闭所有</li>
       <li @click="closeLeft">关闭左侧</li>
       <li @click="closeRight">关闭右侧</li>
@@ -37,23 +35,23 @@ export default {
       top: 0,
       isCollapse: false,
       isMobile: false,
-      rightActive: ''
+      rightActive: '',
     }
   },
   created() {
-    this.$bus.on('mobile', isMobile => {
+    this.$bus.on('mobile', (isMobile) => {
       this.isMobile = isMobile
     })
-    this.$bus.on('collapse', isCollapse => {
+    this.$bus.on('collapse', (isCollapse) => {
       this.isCollapse = isCollapse
     })
     const initHistorys = [
       {
         name: 'dashboard',
         meta: {
-          title: '仪表盘'
-        }
-      }
+          title: '预定货物',
+        },
+      },
     ]
     this.historys =
       JSON.parse(sessionStorage.getItem('historys')) || initHistorys
@@ -90,9 +88,9 @@ export default {
         {
           name: 'dashboard',
           meta: {
-            title: '仪表盘'
-          }
-        }
+            title: '预定货物',
+          },
+        },
       ]
       this.$router.push({ name: 'dashboard' })
       this.contextMenuVisible = false
@@ -100,10 +98,10 @@ export default {
     },
     closeLeft() {
       const rightIndex = this.historys.findIndex(
-        item => item.name == this.rightActive
+        (item) => item.name == this.rightActive
       )
       const activeIndex = this.historys.findIndex(
-        item => item.name == this.activeValue
+        (item) => item.name == this.activeValue
       )
       this.historys.splice(0, rightIndex)
       if (rightIndex > activeIndex) {
@@ -113,10 +111,10 @@ export default {
     },
     closeRight() {
       const leftIndex = this.historys.findIndex(
-        item => item.name == this.rightActive
+        (item) => item.name == this.rightActive
       )
       const activeIndex = this.historys.findIndex(
-        item => item.name == this.activeValue
+        (item) => item.name == this.activeValue
       )
       this.historys.splice(leftIndex + 1, this.historys.length)
       if (leftIndex < activeIndex) {
@@ -126,13 +124,13 @@ export default {
     },
     closeOther() {
       this.historys = this.historys.filter(
-        item => item.name == this.rightActive
+        (item) => item.name == this.rightActive
       )
       this.$router.push({ name: this.rightActive })
       sessionStorage.setItem('historys', JSON.stringify(this.historys))
     },
     setTab(route) {
-      if (!this.historys.some(item => item.name == route.name)) {
+      if (!this.historys.some((item) => item.name == route.name)) {
         const obj = {}
         obj.name = route.name
         obj.meta = route.meta
@@ -144,7 +142,7 @@ export default {
       this.$router.push({ name: tab.name })
     },
     removeTab(tab) {
-      const index = this.historys.findIndex(item => item.name == tab)
+      const index = this.historys.findIndex((item) => item.name == tab)
       if (this.$route.name == tab) {
         if (this.historys.length == 1) {
           this.$router.push({ name: 'dashboard' })
@@ -157,7 +155,7 @@ export default {
         }
       }
       this.historys.splice(index, 1)
-    }
+    },
   },
   watch: {
     contextMenuVisible() {
@@ -172,11 +170,11 @@ export default {
       }
     },
     $route(to) {
-      this.historys = this.historys.filter(item => !item.meta.hidden)
+      this.historys = this.historys.filter((item) => !item.meta.hidden)
       this.setTab(to)
       sessionStorage.setItem('historys', JSON.stringify(this.historys))
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss">
@@ -207,5 +205,4 @@ export default {
   padding: 0 6px;
   border-top: 1px solid #dcdcdc;
 }
-
 </style>

@@ -29,7 +29,14 @@
 
       <el-table-column label="图片"
                        width="180">
-        <template slot-scope="scope"><img :src=scope.row.productImgUrl /></template>
+        <template slot-scope="scope">
+          <img width="40"
+               v-if="scope.row.productImgUrl!=''"
+               :src=scope.row.productImgUrl />
+          <img width="40"
+               v-else
+               src="@/assets/goods.png" />
+        </template>
       </el-table-column>
 
       <el-table-column label="货名"
@@ -75,7 +82,9 @@
                 tooltip-effect="dark">
         <el-table-column label="图片"
                          width="120">
-          <template slot-scope="scope"><img :src=scope.row.SmartStorageProduct.productImgUrl /></template>
+          <template slot-scope="scope"><img width="40"
+                 v-if="scope.row.productImgUrl!=''"
+                 :src=scope.row.SmartStorageProduct.productImgUrl /></template>
         </el-table-column>
         <el-table-column label="货名"
                          prop="SmartStorageProduct.productName"
@@ -168,7 +177,7 @@ import {
 } from '@/api/smartStorageOrder' //  此处请自行替换地址
 import {
   findSmartStorageProduct,
-  getSmartStorageProductList,
+  getSmartStorageProductValidList,
 } from '@/api/smartStorageProduct' //  此处请自行替换地址
 import { formatTimeToStr } from '@/utils/data'
 import infoList from '@/components/mixins/infoList'
@@ -181,7 +190,7 @@ export default {
       searchInfo: {
         name: '',
       },
-      listApi: getSmartStorageProductList,
+      listApi: getSmartStorageProductValidList,
       dialogFormVisible: false,
       orderDiglogVisible: false,
       enterVisible: false,

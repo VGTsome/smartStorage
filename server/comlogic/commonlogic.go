@@ -7,8 +7,10 @@ import (
 )
 
 var comdict = map[string]string{
-	"COM1": "cabinet",
-	"COM2": "door",
+	"COM1":    "cabinet",
+	"COM2":    "door",
+	"cabinet": "COM1",
+	"door":    "COM2",
 }
 
 //CmdRoute 上行命令路由
@@ -17,24 +19,31 @@ func CmdRoute(com string, upcmd string) {
 	switch comdict[com] {
 	case "cabinet":
 		//标零
-		if command[2] == "37" {
+		if command[2] == "33" {
 
 			upSetZero(com, command)
 		}
 		//查重
-		if command[2] == "36" {
+		if command[2] == "32" {
 			//设置第一个货物
-			if command[11] == "A1" {
+			if command[11] == "01" {
 				upSetFirstProd(com, command)
 			}
 		}
 		//设置货品参数
-		if command[2] == "42" {
+		if command[2] == "36" {
 			upSetSingWeight(com, command)
 		}
-		if command[2] == "31" {
-			if command[len(command)-5] == "01" {
+		//更新货架货物数量
+		if command[2] == "37" {
+			if command[len(command)-9] == "01" {
 				upUpdateCabinetProduct(com, command)
+			}
+			if command[len(command)-9] == "02" {
+				updatePassWeightCurrentOrder(com, command)
+			}
+			if command[len(command)-9] == "03" {
+				checkPassWeight(com, command)
 			}
 		}
 		break
@@ -79,6 +88,9 @@ func cabinetMinus30(cabinetNum string) string {
 	cnum -= 48
 	return strconv.Itoa(cnum)
 }
+func getCmdStatus(cmd []string) string {
+	return cmd[len(cmd)-4]
+}
 
 func buildWholeCmd(command string) string {
 	command = addCheckSum(strings.Trim(command, " ")) + " "
@@ -104,7 +116,7 @@ func RemoveReplicaSliceString(slc []string) []string {
 func hexAddPreZero(hexstr string, zeroGroup int) string {
 	hexstr = "000000000000000000" + hexstr
 	rethex := ""
-	for i := zeroGroup; i >= 1; i-- {
+	for i := 1; i <= zeroGroup; i++ {
 		rethex += " " + hexstr[len(hexstr)-i*2:len(hexstr)-2*(i-1)]
 	}
 	return rethex

@@ -28,7 +28,7 @@ func CreateSmartStorageCabinet(smartStorageCabinet model.SmartStorageCabinet) (e
 // @return                    error
 
 func DeleteSmartStorageCabinet(smartStorageCabinet model.SmartStorageCabinet) (err error) {
-	err = global.GVA_DB.Delete(smartStorageCabinet).Error
+	err = global.GVA_DB.Unscoped().Delete(smartStorageCabinet).Error
 	return err
 }
 
@@ -39,7 +39,7 @@ func DeleteSmartStorageCabinet(smartStorageCabinet model.SmartStorageCabinet) (e
 // @return                    error
 
 func DeleteSmartStorageCabinetByIds(ids request.IdsReq) (err error) {
-	err = global.GVA_DB.Delete(&[]model.SmartStorageCabinet{}, "id in (?)", ids.Ids).Error
+	err = global.GVA_DB.Unscoped().Delete(&[]model.SmartStorageCabinet{}, "id in (?)", ids.Ids).Error
 	return err
 }
 

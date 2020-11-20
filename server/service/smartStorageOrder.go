@@ -44,7 +44,7 @@ func CreateSmartStorageOrder(smartStorageOrderListReq request.SmartStorageOrderL
 // @return                    error
 
 func DeleteSmartStorageOrder(smartStorageOrder model.SmartStorageOrder) (err error) {
-	err = global.GVA_DB.Delete(smartStorageOrder).Error
+	err = global.GVA_DB.Unscoped().Delete(smartStorageOrder).Error
 	return err
 }
 
@@ -55,7 +55,7 @@ func DeleteSmartStorageOrder(smartStorageOrder model.SmartStorageOrder) (err err
 // @return                    error
 
 func DeleteSmartStorageOrderByIds(ids request.IdsReq) (err error) {
-	err = global.GVA_DB.Delete(&[]model.SmartStorageOrder{}, "id in (?)", ids.Ids).Error
+	err = global.GVA_DB.Unscoped().Delete(&[]model.SmartStorageOrder{}, "id in (?)", ids.Ids).Error
 	return err
 }
 
@@ -83,6 +83,18 @@ func UpdateSmartStorageOrderStatus(smartStorageOrder *model.SmartStorageOrder) (
 
 func GetSmartStorageOrder(id uint) (err error, smartStorageOrder model.SmartStorageOrder) {
 	err = global.GVA_DB.Where("id = ?", id).First(&smartStorageOrder).Error
+	return
+}
+func GetSmartStorageOrderByUserId(userId uint) (err error, smartStorageOrder model.SmartStorageOrder) {
+	err = global.GVA_DB.Where("user_id = ?", userId).First(&smartStorageOrder).Error
+	return
+}
+func GetSmartStorageOrderList(id uint) (err error, smartStorageOrders []model.SmartStorageOrder) {
+	err = global.GVA_DB.Where("id = ?", id).Find(&smartStorageOrders).Error
+	return
+}
+func GetSmartStorageOrderListByUserId(userId uint) (err error, smartStorageOrders []model.SmartStorageOrder) {
+	err = global.GVA_DB.Where("user_id = ?", userId).Find(&smartStorageOrders).Error
 	return
 }
 func GetSmartStorageOrderByOrderID(orderId string) (err error, smartStorageOrders []model.SmartStorageOrder) {

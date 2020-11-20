@@ -24,7 +24,7 @@ func CreateSmartStorageQuota(ssq model.SmartStorageQuota) (err error) {
 // @return                    error
 
 func DeleteSmartStorageQuota(ssq model.SmartStorageQuota) (err error) {
-	err = global.GVA_DB.Delete(ssq).Error
+	err = global.GVA_DB.Unscoped().Delete(ssq).Error
 	return err
 }
 
@@ -35,7 +35,7 @@ func DeleteSmartStorageQuota(ssq model.SmartStorageQuota) (err error) {
 // @return                    error
 
 func DeleteSmartStorageQuotaByIds(ids request.IdsReq) (err error) {
-	err = global.GVA_DB.Delete(&[]model.SmartStorageQuota{}, "id in (?)", ids.Ids).Error
+	err = global.GVA_DB.Unscoped().Delete(&[]model.SmartStorageQuota{}, "id in (?)", ids.Ids).Error
 	return err
 }
 

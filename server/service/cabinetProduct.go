@@ -24,7 +24,7 @@ func CreateCabinetProduct(sscp model.CabinetProduct) (err error) {
 // @return                    error
 
 func DeleteCabinetProduct(sscp model.CabinetProduct) (err error) {
-	err = global.GVA_DB.Delete(sscp).Error
+	err = global.GVA_DB.Unscoped().Delete(sscp).Error
 	return err
 }
 
@@ -35,7 +35,7 @@ func DeleteCabinetProduct(sscp model.CabinetProduct) (err error) {
 // @return                    error
 
 func DeleteCabinetProductByIds(ids request.IdsReq) (err error) {
-	err = global.GVA_DB.Delete(&[]model.CabinetProduct{}, "id in (?)", ids.Ids).Error
+	err = global.GVA_DB.Unscoped().Delete(&[]model.CabinetProduct{}, "id in (?)", ids.Ids).Error
 	return err
 }
 
@@ -67,9 +67,18 @@ func GetCabinetProductByCabinetName(cabinetName string) (err error, sscp model.C
 	err = global.GVA_DB.Where("cabinet_id = ?", ssc.CabinetId).First(&sscp).Error
 	return
 }
+func GetCabinetProductByCabinetId(cabinetId int) (err error, sscp model.CabinetProduct) {
+	err = global.GVA_DB.Where("cabinet_id = ?", cabinetId).First(&sscp).Error
+	return
+}
 func GetCabinetProductByProductId(productId string) (err error, sscp model.CabinetProduct) {
 
 	err = global.GVA_DB.Where("product_id = ?", productId).First(&sscp).Error
+	return
+}
+func GetCabinetProductListByProductId(productId string) (err error, sscps []model.CabinetProduct) {
+
+	err = global.GVA_DB.Where("product_id = ?", productId).Find(&sscps).Error
 	return
 }
 

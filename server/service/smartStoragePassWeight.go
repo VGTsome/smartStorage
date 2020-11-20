@@ -24,7 +24,7 @@ func CreateSmartStoragePassWeight(smartStoragePassWeight model.SmartStoragePassW
 // @return                    error
 
 func DeleteSmartStoragePassWeight(smartStoragePassWeight model.SmartStoragePassWeight) (err error) {
-	err = global.GVA_DB.Delete(smartStoragePassWeight).Error
+	err = global.GVA_DB.Unscoped().Delete(smartStoragePassWeight).Error
 	return err
 }
 
@@ -35,7 +35,7 @@ func DeleteSmartStoragePassWeight(smartStoragePassWeight model.SmartStoragePassW
 // @return                    error
 
 func DeleteSmartStoragePassWeightByIds(ids request.IdsReq) (err error) {
-	err = global.GVA_DB.Delete(&[]model.SmartStoragePassWeight{}, "id in (?)", ids.Ids).Error
+	err = global.GVA_DB.Unscoped().Delete(&[]model.SmartStoragePassWeight{}, "id in (?)", ids.Ids).Error
 	return err
 }
 
@@ -59,6 +59,10 @@ func UpdateSmartStoragePassWeight(smartStoragePassWeight *model.SmartStoragePass
 
 func GetSmartStoragePassWeight(id uint) (err error, smartStoragePassWeight model.SmartStoragePassWeight) {
 	err = global.GVA_DB.Where("id = ?", id).First(&smartStoragePassWeight).Error
+	return
+}
+func GetSmartStoragePassWeightFirst() (err error, smartStoragePassWeight model.SmartStoragePassWeight) {
+	err = global.GVA_DB.First(&smartStoragePassWeight).Error
 	return
 }
 
@@ -92,15 +96,15 @@ func GetSmartStoragePassWeightListByShelf(com string, shelf string) (err error, 
 	return err, smartStoragePassWeights, total
 }
 
-//GetSmartStoragePassWeightZeroList 获取对应orderID的pass为0列表
-func GetSmartStoragePassWeightZeroList(order_id string) (err error, smartStoragePassWeights []model.SmartStoragePassWeight, total int) {
+//GetSmartStoragePassWeightStatusList 获取对应orderID的pass为0列表
+func GetSmartStoragePassWeightStatusList(pass int) (err error, smartStoragePassWeights []model.SmartStoragePassWeight, total int) {
 
 	// 创建db
 	db := global.GVA_DB.Model(&model.SmartStoragePassWeight{})
 
 	// 如果有条件搜索 下方会自动创建搜索语句
 	err = db.Count(&total).Error
-	err = db.Where("pass = ? AND order_id=? ", 0, order_id).Find(&smartStoragePassWeights).Error
+	err = db.Where("pass = ?  ", pass).Find(&smartStoragePassWeights).Error
 	return err, smartStoragePassWeights, total
 }
 

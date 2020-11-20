@@ -90,7 +90,7 @@ func UpdateCabinetProduct(c *gin.Context) {
 		if sscp.ProductNumber == 0 {
 			comlogic.SetZero(ssc.CabinetName)
 
-		} else {
+		} else if sscp.ProductNumber > 0 {
 			//初始化
 			comlogic.InitProduct(ssc.CabinetName, sscp.ProductNumber)
 
@@ -135,12 +135,21 @@ func FindCabinetProduct(c *gin.Context) {
 func GetCabinetProductList(c *gin.Context) {
 	var pageInfo request.CabinetProductSearch
 	_ = c.ShouldBindQuery(&pageInfo)
+
 	//更新数量和单位重量
+	if pageInfo.PageSize == 919 {
+		//发送预备动作
+		comlogic.UpdateAllProd("00", pageInfo.Page)
+		pageInfo.PageSize = 10
+		pageInfo.Page = 1
+	}
 	if pageInfo.PageSize == 999 {
 		//更新货架
-		comlogic.UpdateAllProd("01")
+		comlogic.UpdateAllProd("01", pageInfo.Page)
 		pageInfo.PageSize = 10
+		pageInfo.Page = 1
 	}
+
 	err, list, total := service.GetCabinetProductInfoList(pageInfo)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取数据失败，%v", err), c)

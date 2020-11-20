@@ -32,6 +32,18 @@
           </el-popover>
         </el-form-item>
         <el-form-item>
+          选择更新货柜
+          <el-select v-model="page"
+                     placeholder="选择更新货柜号">
+            <el-option value="1"></el-option>
+            <el-option value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="updatePrepare"
+                     type="primary">全部更新预备</el-button>
+        </el-form-item>
+        <el-form-item>
           <el-button @click="updateAll"
                      type="primary">全部更新</el-button>
         </el-form-item>
@@ -251,6 +263,11 @@ export default {
     updateAll() {
       this.page = 1
       this.pageSize = 999
+      this.getTableData()
+    },
+    updatePrepare() {
+      this.page = 1
+      this.pageSize = 919
       this.getTableData()
     },
     handleSelectionChange(val) {

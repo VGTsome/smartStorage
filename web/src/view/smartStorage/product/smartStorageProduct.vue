@@ -66,7 +66,14 @@
       <el-table-column label="图片"
                        prop="productImgUrl"
                        width="100">
-        <template slot-scope="scope"><img :src=scope.row.productImgUrl /></template>
+        <template slot-scope="scope">
+          <img width="40"
+               v-if="scope.row.productImgUrl!=''"
+               :src=scope.row.productImgUrl />
+          <img width="40"
+               v-else
+               src="@/assets/goods.png" />
+        </template>
       </el-table-column>
 
       <el-table-column label="满包装数量"
