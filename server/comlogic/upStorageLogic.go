@@ -1,6 +1,7 @@
 package comlogic
 
 import (
+	"gin-vue-admin/model"
 	"gin-vue-admin/service"
 	"strconv"
 	"strings"
@@ -93,6 +94,7 @@ func upUpdateCabinetProduct(com string, command []string) {
 		//ssp.ProductNumber = sscp.ProductNumber
 		//service.UpdateSmartStorageProduct(&ssp)
 	}
+	service.SetSystemStatus(1)
 }
 
 //检验盘货步骤1发送结果 保留位02
@@ -109,20 +111,23 @@ func updatePassWeightCurrentOrder(com string, command []string) {
 	}
 	_, _, total := service.GetSmartStoragePassWeightStatusList(0)
 	if total == 0 {
-		_, sscos, _ := service.GetSmartStorageCurrentOrderInfoAllList()
-		for _, ssco := range sscos {
-			cabinetList := strings.Split(ssco.CabinetList, ",")
-			for _, cabinetName := range cabinetList {
-				SetLight(cabinetName, "32")
-			}
-
-		}
+		setCurrentOrderLight("32")
 		openDoor()
 		time.Sleep(time.Second * 5)
 		closeDoor()
+		service.SetSystemStatus(2)
 	}
 }
+func setCurrentOrderLight(lightCode string) {
+	_, sscos, _ := service.GetSmartStorageCurrentOrderInfoAllList()
+	for _, ssco := range sscos {
+		cabinetList := strings.Split(ssco.CabinetList, ",")
+		for _, cabinetName := range cabinetList {
+			SetLight(cabinetName, lightCode)
+		}
 
+	}
+}
 func getBoxNumFromCommand(boxNumStr string, command []string) (proNum int) {
 	boxNum, _ := strconv.Atoi(boxNumStr)
 	proNumHex := command[boxNum*2+5] + command[boxNum*2+4]
@@ -181,8 +186,33 @@ func checkPassWeight(com string, command []string) {
 
 			openDoor()
 			closeDoor()
+			updateStorageByPassWeight(sspws)
+			updateOrderStatusByOrderId(sspws[0].OrderId)
+			setCurrentOrderLight("30")
+			service.TruncateSmartStorageCurrentOrder()
+			service.TruncateSmartStoragePassWeight()
+			service.SetSystemStatus(1)
+		} else {
+			//allShelfSendInit()
 		}
 
 	}
 
+}
+
+func updateStorageByPassWeight(sspws []model.SmartStoragePassWeight) {
+	for _, sspw := range sspws {
+		_, sscp := service.GetCabinetProductByCabinetId(sspw.CabinetId)
+		sscp.ProductNumber = sspw.ProductNewNumber
+		service.UpdateCabinetProduct(&sscp)
+
+	}
+}
+
+func updateOrderStatusByOrderId(orderId string) {
+	_, ssos := service.GetSmartStorageOrderByOrderID(orderId)
+	for _, sso := range ssos {
+		sso.OrderStatus = 10
+		service.UpdateSmartStorageOrder(&sso)
+	}
 }

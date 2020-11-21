@@ -88,12 +88,27 @@ func UpdateCabinetProduct(c *gin.Context) {
 	} else {
 		//清零
 		if sscp.ProductNumber == 0 {
-			comlogic.SetZero(ssc.CabinetName)
+			systemStatus := service.GetSystemStatus()
+			if systemStatus < 3 {
+				if systemStatus == 1 {
+					service.SetSystemStatus(2)
+				}
+				comlogic.SetZero(ssc.CabinetName)
+			} else {
+				response.FailWithMessage(fmt.Sprintf("更新失败，%v", "有用户在取货"), c)
+			}
 
 		} else if sscp.ProductNumber > 0 {
 			//初始化
-			comlogic.InitProduct(ssc.CabinetName, sscp.ProductNumber)
-
+			systemStatus := service.GetSystemStatus()
+			if systemStatus < 3 {
+				if systemStatus == 1 {
+					service.SetSystemStatus(2)
+				}
+				comlogic.InitProduct(ssc.CabinetName, sscp.ProductNumber)
+			} else {
+				response.FailWithMessage(fmt.Sprintf("更新失败，%v", "有用户在取货"), c)
+			}
 		}
 	}
 

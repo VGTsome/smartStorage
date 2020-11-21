@@ -40,6 +40,7 @@ func CmdRoute(com string, upcmd string) {
 				upUpdateCabinetProduct(com, command)
 			}
 			if command[len(command)-9] == "02" {
+
 				updatePassWeightCurrentOrder(com, command)
 			}
 			if command[len(command)-9] == "03" {

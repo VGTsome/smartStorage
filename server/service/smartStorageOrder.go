@@ -21,14 +21,28 @@ func CreateSmartStorageOrder(smartStorageOrderListReq request.SmartStorageOrderL
 	//errcheck := global.GVA_DB.Where("user_id = ?", userId).Not("order_status", "10").First(&smartStorageOrder).Error
 	timeUnixNano := strconv.FormatInt(time.Now().UnixNano(), 10) //单位纳秒
 	if global.GVA_DB.Where("user_id = ?", userId).Not("order_status", "10").First(&smartStorageOrder).RecordNotFound() {
-		for i := 0; i < len(smartStorageOrderListReq.SmartStorageOrderList); i++ {
-			smartStorageOrderListReq.SmartStorageOrderList[i].UserId = userId
-			smartStorageOrderListReq.SmartStorageOrderList[i].OrderId = timeUnixNano
-			err = global.GVA_DB.Create(&(smartStorageOrderListReq.SmartStorageOrderList[i])).Error
-			if err != nil {
+		canOrder := true
+		for _, sso := range smartStorageOrderListReq.SmartStorageOrderList {
+
+			_, ssp := GetSmartStorageProductByProductId(sso.ProductId)
+			if sso.OrderNumber > ssp.ProductNumber {
+				canOrder = false
 				break
 			}
 		}
+		if canOrder {
+			for _, sso := range smartStorageOrderListReq.SmartStorageOrderList {
+				sso.UserId = userId
+				sso.OrderId = timeUnixNano
+				err = global.GVA_DB.Create(&sso).Error
+				if err != nil {
+					break
+				}
+			}
+		} else {
+			return errors.New("库存货物不足，请联系管理员补货")
+		}
+
 	} else {
 
 		return errors.New("还有未完成的订单")

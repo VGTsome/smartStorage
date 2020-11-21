@@ -33,6 +33,7 @@ func DBTables() {
 		model.SmartStoragePassWeight{},
 		model.SmartStorageComReceive{},
 		model.SmartStorageCurrentOrder{},
+		model.SmartStorageSystemStatus{},
 	)
 	global.GVA_LOG.Debug("register table success")
 }

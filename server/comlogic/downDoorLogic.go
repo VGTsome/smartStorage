@@ -1,7 +1,4 @@
 package comlogic
 
-func openDoor() {}
-func exitRoom() {
-
-}
+func openDoor()  {}
 func closeDoor() {}

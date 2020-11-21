@@ -7,7 +7,11 @@ import (
 	"strings"
 )
 
+//EnterScanFaceID 进门扫脸
 func EnterScanFaceID(com string, command []string) {
+	if service.GetSystemStatus() != 1 {
+		return
+	}
 	_, _, total := service.GetSmartStorageCurrentOrderInfoAllList()
 	if total > 0 {
 		return
@@ -68,7 +72,7 @@ func EnterScanFaceID(com string, command []string) {
 	}
 
 }
-func UpExitDoor(com string, command []string) {
+func allShelfSendInit() {
 	_, sscps, _ := service.GetAllCabinetProductList()
 	shelflist := make(map[string]bool)
 	for _, sscp := range sscps {
@@ -81,4 +85,7 @@ func UpExitDoor(com string, command []string) {
 		}
 
 	}
+}
+func UpExitDoor(com string, command []string) {
+	allShelfSendInit()
 }
