@@ -1,21 +1,53 @@
 package comlogic
 
 import (
+	"encoding/binary"
+	"encoding/hex"
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 )
 
 var comdict = map[string]string{
-	"COM1":    "cabinet",
-	"COM2":    "door",
-	"cabinet": "COM1",
-	"door":    "COM2",
+	"COM5":    "cabinet",
+	"COM1":    "door",
+	"cabinet": "COM5",
+	"door":    "COM1",
+}
+
+func float32ToByte(float float32) []byte {
+	bits := math.Float32bits(float)
+	bytes := make([]byte, 4)
+	binary.LittleEndian.PutUint32(bytes, bits)
+
+	return bytes
+}
+func reverseByte(ori []byte) []byte {
+	bytes := make([]byte, 4)
+	for index := range ori {
+		bytes[index] = ori[len(ori)-index-1]
+	}
+	return bytes
+}
+
+//intToFloatHexString int转32位float的十六进制反转
+func intToFloatHexString(ori int) string {
+	orifloat := float32(ori)
+	floatByte := float32ToByte(orifloat)
+
+	hexStringData := hex.EncodeToString(floatByte)
+	return hexStringData
+}
+func hexStringToFloat(hexStr string) float32 {
+	n, _ := strconv.ParseUint(hexStr, 16, 32)
+	f := math.Float32frombits(uint32(n))
+	return f
 }
 
 //CmdRoute 上行命令路由
 func CmdRoute(com string, upcmd string) {
-	command := strings.Split(upcmd, " ")
+	command := strings.Split(strings.Trim(upcmd, " "), " ")
 	switch comdict[com] {
 	case "cabinet":
 		//标零
@@ -26,7 +58,7 @@ func CmdRoute(com string, upcmd string) {
 		//查重
 		if command[2] == "32" {
 			//设置第一个货物
-			if command[11] == "01" {
+			if command[10] == "01" {
 				upSetFirstProd(com, command)
 			}
 		}
@@ -89,6 +121,14 @@ func cabinetMinus30(cabinetNum string) string {
 	cnum -= 48
 	return strconv.Itoa(cnum)
 }
+func boxSToHex(boxNum string) string {
+
+	cnum := strings.Trim(hexAddPreZeroRerverse(boxNum, 1), " ")
+	return cnum
+}
+func boxSToS(boxNum string) string {
+	return strconv.Itoa(hexstringToNumber(boxNum))
+}
 func getCmdStatus(cmd []string) string {
 	return cmd[len(cmd)-4]
 }
@@ -96,14 +136,15 @@ func getCmdStatus(cmd []string) string {
 func buildWholeCmd(command string) string {
 	command = addCheckSum(strings.Trim(command, " ")) + " "
 	cmdlen := len(command) / 3
-	cmdlen += 2
-	cmdlenstr := hexAddPreZero(intToHexString(cmdlen), 2)
-	return "02 " + cmdlenstr + command + " 03"
+	cmdlen += 3
+	cmdlenstr := hexAddPreZero(intToHexString(cmdlen), 1)
+	return "02" + cmdlenstr + " " + command + "03"
 }
+
+// RemoveReplicaSliceString
+//  slice(string类型)元素去重
 func RemoveReplicaSliceString(slc []string) []string {
-	/*
-	   slice(string类型)元素去重
-	*/
+
 	result := make([]string, 0)
 	tempMap := make(map[string]bool, len(slc))
 	for _, e := range slc {
@@ -114,10 +155,19 @@ func RemoveReplicaSliceString(slc []string) []string {
 	}
 	return result
 }
-func hexAddPreZero(hexstr string, zeroGroup int) string {
+func hexAddPreZeroRerverse(hexstr string, zeroGroup int) string {
 	hexstr = "000000000000000000" + hexstr
 	rethex := ""
 	for i := 1; i <= zeroGroup; i++ {
+		rethex += " " + hexstr[len(hexstr)-i*2:len(hexstr)-2*(i-1)]
+	}
+	return rethex
+
+}
+func hexAddPreZero(hexstr string, zeroGroup int) string {
+	hexstr = "000000000000000000" + hexstr
+	rethex := ""
+	for i := zeroGroup; i > 0; i-- {
 		rethex += " " + hexstr[len(hexstr)-i*2:len(hexstr)-2*(i-1)]
 	}
 	return rethex
@@ -127,12 +177,12 @@ func addCheckSum(command string) (addCheck string) {
 	command = strings.Trim(command, " ")
 	commandlist := strings.Split(command, " ")
 	total := 0
-	for i := 1; i < len(commandlist); i++ {
+	for i := 0; i < len(commandlist); i++ {
 		total += hexstringToNumber(commandlist[i])
 	}
-
+	total += (5 + len(commandlist))
 	hexstr := intToHexString(total)
 
-	addCheck = command + hexAddPreZero(hexstr, 4)
+	addCheck = command + hexAddPreZero(hexstr, 2)
 	return addCheck
 }

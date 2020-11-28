@@ -62,7 +62,7 @@ func GetSmartStorageProduct(id uint) (err error, smartStorageProduct model.Smart
 	return
 }
 func GetSmartStorageProductByProductId(productId string) (err error, smartStorageProduct model.SmartStorageProduct) {
-	err = global.GVA_DB.Where("productId = ?", productId).First(&smartStorageProduct).Error
+	err = global.GVA_DB.Where("product_id = ?", productId).First(&smartStorageProduct).Error
 	return
 }
 

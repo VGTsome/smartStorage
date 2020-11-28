@@ -11,7 +11,7 @@ import (
 //upSetZero 数据库称台清零
 func upSetZero(com string, command []string) {
 	status := getCmdStatus(command)
-	if status != "5A" {
+	if status != "5a" {
 		return
 	}
 
@@ -27,13 +27,14 @@ func upSetZero(com string, command []string) {
 //初始化第一批物品
 func upSetFirstProd(com string, command []string) {
 	status := getCmdStatus(command)
-	if status != "5A" {
+	if status != "5a" {
 		return
 	}
 	shelf, box := getCabinetAttr(command)
-	prodNumString := command[12]
+	prodNumString := command[11]
 	prodNum := hexstringToNumber(prodNumString)
-	weightString := command[10] + command[9] + command[8] + command[7]
+	weightString := command[9] + command[8] + command[7] + command[6]
+
 	weight := hexstringToNumber(weightString)
 
 	singleWeight := weight / prodNum
@@ -52,21 +53,21 @@ func upSetFirstProd(com string, command []string) {
 }
 func getCabinetAttr(command []string) (shelf string, box string) {
 	shelf = cabinetMinus30(command[3])
-	box = cabinetMinus30(command[4])
+	box = boxSToS(command[4])
 	return shelf, box
 }
 
 //设置货物参数
 func upSetSingWeight(com string, command []string) {
 	status := getCmdStatus(command)
-	if status != "5A" {
+	if status != "5a" {
 		return
 	}
 	shelf, box := getCabinetAttr(command)
 	_, sscp := service.GetCabinetProductByCabinetName(com + "-" + shelf + "-" + box)
 	_, ssp := service.GetSmartStorageProductByProductId(sscp.ProductId)
 
-	if ssp.ProductWeight == hexstringToNumber(command[4]+command[5]+command[6]) && ssp.PackageWeight == hexstringToNumber(command[7]+command[8]+command[9]) {
+	if ssp.ProductWeight == hexstringToNumber(command[10]+command[9]+command[8]+command[7]) && ssp.PackageWeight == hexstringToNumber(command[14]+command[13]+command[12]+command[11]) {
 		SetLight(com+"-"+shelf+"-"+box, "32")
 	}
 	//ssp.ProductNumber = hexstringToNumber(command[10] + command[11])
@@ -77,7 +78,7 @@ func upSetSingWeight(com string, command []string) {
 //更新货物库存 保留位01
 func upUpdateCabinetProduct(com string, command []string) {
 	status := getCmdStatus(command)
-	if status != "5A" {
+	if status != "5a" {
 		return
 	}
 	shelf, _ := getCabinetAttr(command)
@@ -100,7 +101,7 @@ func upUpdateCabinetProduct(com string, command []string) {
 //检验盘货步骤1发送结果 保留位02
 func updatePassWeightCurrentOrder(com string, command []string) {
 	status := getCmdStatus(command)
-	if status != "5A" {
+	if status != "5a" {
 		return
 	}
 	shelf, _ := getCabinetAttr(command)
