@@ -6,7 +6,7 @@ casbin:
 
 # jwt configuration
 jwt:
-    signing-key: 'qmPlus'
+    signing-key: 'xuwang'
 
 # mysql connect configuration
 mysql:
@@ -49,7 +49,8 @@ system:
     rooturl-prefix: http://tools.softcx.cn/nielsen/xsbz/
     img-url-prefix: fileDir/software/
     avatar-url-prefix: fileDir/avatar/
-    com-ipaddr: 127.0.0.1:1500
+    com-ipaddr: 192.168.1.7:777
+    door-ipaddr: 192.168.1.7:888
 
 # captcha configuration
 captcha:
@@ -60,6 +61,6 @@ captcha:
 # logger configuration
 log:
     prefix: '[GIN-VUE-ADMIN]'
-    log-file: true
+    log-file: false
     stdout: 'DEBUG'
     file: 'DEBUG'

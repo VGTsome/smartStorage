@@ -14,7 +14,7 @@ type SmartStorageCurrentOrder struct {
 	ProductName string `json:"productName" form:"productName" gorm:"column:product_name;comment:'';type:varchar(255)"`
 	CabinetList string `json:"cabinetList" form:"cabinetList" gorm:"column:cabinet_list;comment:'';type:varchar(255)"`
 	OrderNumber int    `json:"orderNumber" form:"orderNumber" gorm:"column:order_number;comment:'';type:int(10)"`
-	OrderStatus int    `json:"orderStatus" form:"orderStatus" gorm:"column:order_status;comment:'';type:int(10)"`
+	PickNumber  int    `json:"pickNumber" form:"pickNumber" gorm:"column:pick_number;comment:'';type:int(10)"`
 }
 
 func (SmartStorageCurrentOrder) TableName() string {

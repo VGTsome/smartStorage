@@ -5,6 +5,7 @@ import (
 	"gin-vue-admin/global"
 	"gin-vue-admin/initialize"
 	"gin-vue-admin/middleware"
+
 	"github.com/gin-gonic/gin"
 	"github.com/piexlmax/gvaplug"
 )

@@ -63,6 +63,19 @@ func GetSmartStorageSystemStatus(id uint) (err error, ssss model.SmartStorageSys
 }
 
 //SetSystemStatus 1:正常 2:管理员理货 3:取货中 4:异常状态
+func SetSystemComments(Comments string) {
+	_, ssss := GetSmartStorageSystemStatus(1)
+	ssss.Comments = Comments
+	UpdateSmartStorageSystemStatus(&ssss)
+}
+
+//GetSystemStatus 1:正常 2:管理员理货 3:取货中 4:异常状态
+func GetSystemComments() string {
+	_, ssss := GetSmartStorageSystemStatus(1)
+	return ssss.Comments
+}
+
+//SetSystemStatus 1:正常 2:管理员理货 3:取货中 4:异常状态
 func SetSystemStatus(status int) {
 	_, ssss := GetSmartStorageSystemStatus(1)
 	ssss.SystemStatus = status

@@ -14,6 +14,7 @@ import (
 // @in header
 // @name x-token
 // @BasePath /
+
 func main() {
 	switch global.GVA_CONFIG.System.DbType {
 	case "mysql":
@@ -26,6 +27,6 @@ func main() {
 	initialize.DBTables()
 	// 程序结束前关闭数据库链接
 	defer global.GVA_DB.Close()
-
+	go core.InitTcp()
 	core.RunWindowsServer()
 }

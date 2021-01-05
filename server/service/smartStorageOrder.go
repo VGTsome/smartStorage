@@ -34,6 +34,7 @@ func CreateSmartStorageOrder(smartStorageOrderListReq request.SmartStorageOrderL
 			for _, sso := range smartStorageOrderListReq.SmartStorageOrderList {
 				sso.UserId = userId
 				sso.OrderId = timeUnixNano
+				sso.OrderStatus = -1
 				err = global.GVA_DB.Create(&sso).Error
 				if err != nil {
 					break
@@ -107,12 +108,12 @@ func GetSmartStorageOrderList(id uint) (err error, smartStorageOrders []model.Sm
 	err = global.GVA_DB.Where("id = ?", id).Find(&smartStorageOrders).Error
 	return
 }
-func GetSmartStorageOrderListByUserId(userId uint) (err error, smartStorageOrders []model.SmartStorageOrder) {
-	err = global.GVA_DB.Where("user_id = ?", userId).Find(&smartStorageOrders).Error
+func GetSmartStorageOrderListByUserIdStatus(userId uint, status int) (err error, smartStorageOrders []model.SmartStorageOrder) {
+	err = global.GVA_DB.Where("user_id = ? AND order_status= ? ", userId, status).Find(&smartStorageOrders).Error
 	return
 }
-func GetSmartStorageOrderByOrderID(orderId string) (err error, smartStorageOrders []model.SmartStorageOrder) {
-	err = global.GVA_DB.Where("order_id = ?", orderId).Find(&smartStorageOrders).Error
+func GetSmartStoragesOrderByOrderID(orderId string) (err error, smartStorageOrders []model.SmartStorageOrder) {
+	err = global.GVA_DB.Where("order_id = ? ", orderId).Find(&smartStorageOrders).Error
 	return
 }
 func GetSmartStorageOrderByOrderIDProductId(orderId string, productID string) (err error, smartStorageOrder model.SmartStorageOrder) {
@@ -147,6 +148,25 @@ func GetAllOrderList(info request.SmartStorageOrderSearch) (err error, list inte
 	offset := info.PageSize * (info.Page - 1)
 	var smartStorageOrders []model.SmartStorageOrder
 	db := global.GVA_DB.Order(" order_status,created_at desc").Model(&model.SmartStorageOrder{})
+	// 创建db
+	//db = global.GVA_DB.Model(&smartStorageOrders).Related(&SmartStorageOrder.SmartStorageProduct, "SmartStorageProduct")
+
+	// 如果有条件搜索 下方会自动创建搜索语句
+	err = db.Count(&total).Error
+	err = db.Limit(limit).Offset(offset).Find(&smartStorageOrders).Error
+
+	for index, _ := range smartStorageOrders {
+		global.GVA_DB.Model(&smartStorageOrders[index]).Related(&smartStorageOrders[index].SmartStorageProduct, "SmartStorageProduct")
+		global.GVA_DB.Model(&smartStorageOrders[index]).Select("nick_name").Related(&smartStorageOrders[index].SysUser, "SysUser")
+	}
+	return err, smartStorageOrders, total
+}
+
+func GetMyOrderList(info request.SmartStorageOrderSearch, userid int) (err error, list interface{}, total int) {
+	limit := info.PageSize
+	offset := info.PageSize * (info.Page - 1)
+	var smartStorageOrders []model.SmartStorageOrder
+	db := global.GVA_DB.Where("user_id = ?", userid).Order(" order_status,created_at desc").Model(&model.SmartStorageOrder{})
 	// 创建db
 	//db = global.GVA_DB.Model(&smartStorageOrders).Related(&SmartStorageOrder.SmartStorageProduct, "SmartStorageProduct")
 

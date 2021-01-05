@@ -48,11 +48,10 @@ func Routers() *gin.Engine {
 	router.InitSmartStorageMonitorRouter(ApiGroup)      //摄像头表
 	router.InitSmartStorageOrderRouter(ApiGroup)        //订单表
 	router.InitSmartStorageQuotaRouter(ApiGroup)        //配额表
-	router.InitSmartStorageWeightLogRouter(ApiGroup)    //重量记录表
 	router.InitSmartStoragePassWeightRouter(ApiGroup)   //进门重量记录
-	router.InitSmartStorageComReceiveRouter(ApiGroup)   //com入口
 	router.InitSmartStorageCurrentOrderRouter(ApiGroup) //用户查看当前订单入口
 	router.InitSmartStorageSystemStatusRouter(ApiGroup) //系统状态
+	router.InitSmartStorageComLogRouter(ApiGroup)       //com记录
 	global.GVA_LOG.Info("router register success")
 	return Router
 }

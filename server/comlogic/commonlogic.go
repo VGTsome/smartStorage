@@ -5,15 +5,16 @@ import (
 	"encoding/hex"
 	"fmt"
 	"math"
+	"math/rand"
 	"strconv"
 	"strings"
 )
 
 var comdict = map[string]string{
-	"COM5":    "cabinet",
-	"COM1":    "door",
-	"cabinet": "COM5",
-	"door":    "COM1",
+	"COM1":    "cabinet",
+	"COM2":    "door",
+	"cabinet": "COM1",
+	"door":    "COM2",
 }
 
 func float32ToByte(float float32) []byte {
@@ -68,6 +69,7 @@ func CmdRoute(com string, upcmd string) {
 		}
 		//更新货架货物数量
 		if command[2] == "37" {
+
 			if command[len(command)-9] == "01" {
 				upUpdateCabinetProduct(com, command)
 			}
@@ -134,6 +136,8 @@ func getCmdStatus(cmd []string) string {
 }
 
 func buildWholeCmd(command string) string {
+	command = command[0:len(command)-6] + hexAddPreZero(intToHexString(rand.Intn(255)), 1) + hexAddPreZero(intToHexString(rand.Intn(255)), 1)
+
 	command = addCheckSum(strings.Trim(command, " ")) + " "
 	cmdlen := len(command) / 3
 	cmdlen += 3
@@ -141,8 +145,7 @@ func buildWholeCmd(command string) string {
 	return "02" + cmdlenstr + " " + command + "03"
 }
 
-// RemoveReplicaSliceString
-//  slice(string类型)元素去重
+// RemoveReplicaSliceString slice(string类型)元素去重
 func RemoveReplicaSliceString(slc []string) []string {
 
 	result := make([]string, 0)

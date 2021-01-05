@@ -52,13 +52,15 @@
                        prop="productId"
                        width="120"></el-table-column>
 
-      <el-table-column label="操作">
+      <el-table-column label="预定数量">
+
         <template slot-scope="scope">
           <el-input-number placeholder="计数器"
                            v-model=scope.row.orderNumber
                            @change="updateCart(scope.row)"
                            :min=0></el-input-number>
         </template>
+
       </el-table-column>
     </el-table>
 
@@ -205,8 +207,11 @@ export default {
     formatStatus(row, column) {
       let retstatus = ''
       switch (row.orderStatus) {
-        case 0:
-          retstatus = '未完成'
+        case -1:
+          retstatus = '提交待审核'
+          break
+        case 1:
+          retstatus = '已审核'
           break
         case 10:
           retstatus = '已完成'

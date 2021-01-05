@@ -20,21 +20,122 @@ import (
 // @Param data body model.SmartStorageCurrentOrder true "创建SmartStorageCurrentOrder"
 // @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
 // @Router /smartStorageCurrentOrder/createSmartStorageCurrentOrder [post]
+// @Summary 创建SmartStorageCurrentOrder
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.SmartStorageCurrentOrder true "创建SmartStorageCurrentOrder"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /smartStorageCurrentOrder/createSmartStorageCurrentOrder [post]
+// @Summary 创建SmartStorageCurrentOrder
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.SmartStorageCurrentOrder true "创建SmartStorageCurrentOrder"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /smartStorageCurrentOrder/createSmartStorageCurrentOrder [post]
+// @Summary 创建SmartStorageCurrentOrder
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.SmartStorageCurrentOrder true "创建SmartStorageCurrentOrder"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /smartStorageCurrentOrder/createSmartStorageCurrentOrder [post]
+// @Summary 创建SmartStorageCurrentOrder
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.SmartStorageCurrentOrder true "创建SmartStorageCurrentOrder"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /smartStorageCurrentOrder/createSmartStorageCurrentOrder [post]
+// @Summary 创建SmartStorageCurrentOrder
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.SmartStorageCurrentOrder true "创建SmartStorageCurrentOrder"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /smartStorageCurrentOrder/createSmartStorageCurrentOrder [post]
+// @Summary 创建SmartStorageCurrentOrder
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.SmartStorageCurrentOrder true "创建SmartStorageCurrentOrder"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /smartStorageCurrentOrder/createSmartStorageCurrentOrder [post]
+// @Summary 创建SmartStorageCurrentOrder
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.SmartStorageCurrentOrder true "创建SmartStorageCurrentOrder"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /smartStorageCurrentOrder/createSmartStorageCurrentOrder [post]
+// @Summary 创建SmartStorageCurrentOrder
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.SmartStorageCurrentOrder true "创建SmartStorageCurrentOrder"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /smartStorageCurrentOrder/createSmartStorageCurrentOrder [post]
+// @Summary 创建SmartStorageCurrentOrder
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.SmartStorageCurrentOrder true "创建SmartStorageCurrentOrder"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /smartStorageCurrentOrder/createSmartStorageCurrentOrder [post]
+// @Summary 创建SmartStorageCurrentOrder
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.SmartStorageCurrentOrder true "创建SmartStorageCurrentOrder"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /smartStorageCurrentOrder/createSmartStorageCurrentOrder [post]
+// @Summary 创建SmartStorageCurrentOrder
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.SmartStorageCurrentOrder true "创建SmartStorageCurrentOrder"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /smartStorageCurrentOrder/createSmartStorageCurrentOrder [post]
+// @Summary 创建SmartStorageCurrentOrder
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.SmartStorageCurrentOrder true "创建SmartStorageCurrentOrder"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /smartStorageCurrentOrder/createSmartStorageCurrentOrder [post]
+// @Summary 创建SmartStorageCurrentOrder
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.SmartStorageCurrentOrder true "创建SmartStorageCurrentOrder"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /smartStorageCurrentOrder/createSmartStorageCurrentOrder [post]
+// @Summary 创建SmartStorageCurrentOrder
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.SmartStorageCurrentOrder true "创建SmartStorageCurrentOrder"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /smartStorageCurrentOrder/createSmartStorageCurrentOrder [post]
+// @Summary 创建SmartStorageCurrentOrder
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.SmartStorageCurrentOrder true "创建SmartStorageCurrentOrder"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /smartStorageCurrentOrder/createSmartStorageCurrentOrder [post]
 func CreateSmartStorageCurrentOrder(c *gin.Context) {
 	var smartStorageCurrentOrder model.SmartStorageCurrentOrder
 	_ = c.ShouldBindJSON(&smartStorageCurrentOrder)
-	cs := []string{"02", "FA", "31", "31", "", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "00", "5A", "01", "B6", "03"}
-	if smartStorageCurrentOrder.OrderId == "" && smartStorageCurrentOrder.UserId == 0 {
-		//comlogic.EnterScanFaceID("COM1", cs)
-		comlogic.UpExitDoor("COM1", cs)
+
+	err := service.CreateSmartStorageCurrentOrder(smartStorageCurrentOrder)
+	if err != nil {
+		response.FailWithMessage(fmt.Sprintf("创建失败，%v", err), c)
 	} else {
-		err := service.CreateSmartStorageCurrentOrder(smartStorageCurrentOrder)
-		if err != nil {
-			response.FailWithMessage(fmt.Sprintf("创建失败，%v", err), c)
-		} else {
-			response.OkWithMessage("创建成功", c)
-		}
+		response.OkWithMessage("创建成功", c)
 	}
+
 }
 
 // @Tags SmartStorageCurrentOrder
@@ -124,6 +225,15 @@ func FindSmartStorageCurrentOrder(c *gin.Context) {
 func GetSmartStorageCurrentOrderList(c *gin.Context) {
 	var pageInfo request.SmartStorageCurrentOrderSearch
 	_ = c.ShouldBindQuery(&pageInfo)
+	cs := []string{"02", "03"}
+	if pageInfo.PageSize == 999 {
+		pageInfo.PageSize = 10
+		comlogic.UpExitDoor("COM1", cs)
+	}
+	if pageInfo.PageSize == 99 {
+		pageInfo.PageSize = 10
+		comlogic.EnterScanFaceID("COM1", cs)
+	}
 	err, list, total := service.GetSmartStorageCurrentOrderInfoList(pageInfo)
 
 	if err != nil {
@@ -137,4 +247,3 @@ func GetSmartStorageCurrentOrderList(c *gin.Context) {
 		}, c)
 	}
 }
-

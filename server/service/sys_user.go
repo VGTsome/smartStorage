@@ -20,10 +20,10 @@ import (
 func Register(u model.SysUser) (err error, userInter model.SysUser) {
 	var user model.SysUser
 	// 判断用户名是否注册
-	notRegister := global.GVA_DB.Where("username = ?", u.Username).First(&user).RecordNotFound()
+	notRegister := global.GVA_DB.Where("username = ? or scan_id= ? ", u.Username, u.ScanID).First(&user).RecordNotFound()
 	// notRegister为false表明读取到了 不能注册
 	if !notRegister {
-		return errors.New("用户名已注册"), userInter
+		return errors.New("用户名或门禁ID已注册"), userInter
 	} else {
 		// 否则 附加uuid 密码md5简单加密 注册
 		u.Password = utils.MD5V([]byte(u.Password))
@@ -31,6 +31,29 @@ func Register(u model.SysUser) (err error, userInter model.SysUser) {
 		err = global.GVA_DB.Create(&u).Error
 	}
 	return err, u
+}
+func UpdateUser(u request.RegisterStruct) (err error, userInter model.SysUser) {
+	var oriuser model.SysUser
+	var checkuser model.SysUser
+	var checkScanID model.SysUser
+	global.GVA_DB.Where("id = ?", u.ID).First(&oriuser)
+	existName := global.GVA_DB.Where("username = ? ", u.Username).First(&checkuser).RecordNotFound()
+	existScanID := global.GVA_DB.Where("scan_id = ? ", u.ScanID).First(&checkScanID).RecordNotFound()
+
+	// notRegister为false表明读取到了 不能注册
+
+	if !existName && oriuser.Username != u.Username {
+		return errors.New("用户名重复"), userInter
+	} else if !existScanID && oriuser.ScanID != u.ScanID {
+		return errors.New("门禁ID重复"), userInter
+	} else {
+		if u.Password != "" {
+			u.Password = utils.MD5V([]byte(u.Password))
+		}
+
+		global.GVA_DB.Model(model.SysUser{}).Where("id = ?", u.ID).Updates(&u)
+	}
+	return err, userInter
 }
 
 // @title    Login
@@ -123,5 +146,11 @@ func UploadHeaderImg(uuid uuid.UUID, filePath string) (err error, userInter *mod
 func GetUserByScanID(scanID string) (err error, user model.SysUser) {
 
 	err = global.GVA_DB.Where("scan_id = ?", scanID).First(&user).Error
+	return err, user
+}
+
+func GetUserByID(ID uint) (err error, user model.SysUser) {
+
+	err = global.GVA_DB.Where("id = ?", ID).First(&user).Error
 	return err, user
 }

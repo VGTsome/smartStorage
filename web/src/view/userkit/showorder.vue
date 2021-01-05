@@ -1,5 +1,6 @@
 <template>
   <div>
+    <ssss></ssss>
     <div class="search-term">
       <el-form :inline="true"
                :model="searchInfo"
@@ -9,8 +10,12 @@
                      type="primary">查询</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button @click="openDialog"
-                     type="danger">开门</el-button>
+          <el-button @click="onTestEnter"
+                     type="danger">测试进门</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="onTestExit"
+                     type="danger">测试出门</el-button>
         </el-form-item>
         <el-form-item>
           <el-popover placement="top"
@@ -40,37 +45,26 @@
               stripe
               style="width: 100%"
               tooltip-effect="dark">
-      <el-table-column type="selection"
-                       width="55"></el-table-column>
-      <el-table-column label="订单时间"
-                       width="180">
+
+      <el-table-column label="订单时间">
         <template slot-scope="scope">{{scope.row.CreatedAt|formatDate}}</template>
       </el-table-column>
 
       <el-table-column label="订单编号"
-                       prop="orderId"
-                       width="220"></el-table-column>
+                       prop="orderId"></el-table-column>
 
       <el-table-column label="用户编号"
-                       prop="userId"
-                       width="120"></el-table-column>
+                       prop="userId"></el-table-column>
 
       <el-table-column label="货品名称"
-                       prop="productName"
-                       width="120"></el-table-column>
+                       prop="productName"></el-table-column>
       <el-table-column label="货架号"
-                       prop="cabinetList"
-                       width="120"></el-table-column>
+                       prop="cabinetList"></el-table-column>
 
-      <el-table-column label="订单数"
-                       prop="orderNumber"
-                       width="120"></el-table-column>
+      <el-table-column label="预定数"
+                       prop="orderNumber"></el-table-column>
 
-      <!--el-table-column label="订单状态"
-                       prop="orderStatus"
-                       width="120"></!--el-table-column>
-
-      <el-table-column label="按钮组">
+      <!--el-table-column label="按钮组">
         <template slot-scope="scope">
           <el-button @click="updateSmartStorageCurrentOrder(scope.row)"
                      size="small"
@@ -96,14 +90,14 @@
       </el-table-column-->
     </el-table>
 
-    <el-pagination :current-page="page"
+    <!-- <el-pagination :current-page="page"
                    :page-size="pageSize"
                    :page-sizes="[10, 30, 50, 100]"
                    :style="{float:'right',padding:'20px'}"
                    :total="total"
                    @current-change="handleCurrentChange"
                    @size-change="handleSizeChange"
-                   layout="total, sizes, prev, pager, next, jumper"></el-pagination>
+                   layout="total, sizes, prev, pager, next, jumper"></el-pagination> -->
 
     <el-dialog :before-close="closeDialog"
                :visible.sync="dialogFormVisible"
@@ -130,10 +124,14 @@ import {
 } from '@/api/smartStorageCurrentOrder' //  此处请自行替换地址
 import { formatTimeToStr } from '@/utils/data'
 import infoList from '@/components/mixins/infoList'
+import smartStorageSystemStatus from '@/view/userkit/smartStorageSystemStatus'
 
 export default {
   name: 'SmartStorageCurrentOrder',
   mixins: [infoList],
+  components: {
+    ssss: smartStorageSystemStatus,
+  },
   data() {
     return {
       listApi: getSmartStorageCurrentOrderList,
@@ -171,10 +169,25 @@ export default {
     },
   },
   methods: {
-    //条件搜索前端看此方法
+    DDDD() {
+      setInterval(
+        this.onSubmit, //刷新页面
+        6000
+      )
+    }, //这就是 一分钟
     onSubmit() {
       this.page = 1
-      this.pageSize = 10
+      this.pageSize = 100
+      this.getTableData()
+    },
+    onTestEnter() {
+      this.page = 1
+      this.pageSize = 99
+      this.getTableData()
+    },
+    onTestExit() {
+      this.page = 1
+      this.pageSize = 999
       this.getTableData()
     },
     handleSelectionChange(val) {
@@ -254,6 +267,7 @@ export default {
   },
   created() {
     this.getTableData()
+    this.DDDD()
   },
 }
 </script>

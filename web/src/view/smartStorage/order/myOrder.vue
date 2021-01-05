@@ -40,35 +40,7 @@
                        :formatter="formatStatus"
                        prop="orderStatus"
                        width="120"></el-table-column>
-      <el-table-column label="操作"
-                       width="320">
-        <template slot-scope="scope">
-          <el-button @click="passOrder(scope.row)"
-                     size="mini"
-                     :disabled="scope.row.orderStatus!='-1'"
-                     type="primary">审核通过</el-button>
-          <el-button @click="passAllOrder(scope.row)"
-                     size="mini"
-                     :disabled="scope.row.orderStatus!='-1'"
-                     type="primary">全部审核通过</el-button>
-          <el-popover placement="top"
-                      v-model="orderCancelVisible[scope.$index]"
-                      width="160">
-            <p>确定通过吗？</p>
-            <div style="text-align: right; margin: 0">
 
-              <el-button @click="fixOrder(scope.row)"
-                         size="mini"
-                         type="primary">确定</el-button>
-            </div>
-            <el-button slot="reference"
-                       :disabled="scope.row.orderStatus!='401'"
-                       size="mini"
-                       type="danger">强制放行</el-button>
-          </el-popover>
-
-        </template>
-      </el-table-column>
     </el-table>
     <el-pagination :current-page="page"
                    :page-size="pageSize"
@@ -90,6 +62,7 @@ import {
   findSmartStorageOrder,
   getSmartStorageOrderList,
   getAllOrderList,
+  getMyOrderList,
   updateSmartStorageOrderStatus,
 } from '@/api/smartStorageOrder'
 import { formatTimeToStr } from '@/utils/data'
@@ -99,7 +72,7 @@ export default {
   mixins: [infoList],
   data() {
     return {
-      listApi: getAllOrderList,
+      listApi: getMyOrderList,
       orderCancelVisible: [],
       searchInfo: '',
     }

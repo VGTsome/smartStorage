@@ -4,11 +4,13 @@ import uuid "github.com/satori/go.uuid"
 
 // User register structure
 type RegisterStruct struct {
+	ID          uint   `json:"ID"`
 	Username    string `json:"userName"`
 	Password    string `json:"passWord"`
 	NickName    string `json:"nickName" gorm:"default:'QMPlusUser'"`
 	HeaderImg   string `json:"headerImg" gorm:"default:'http://www.henrongyi.top/avatar/lufu.jpg'"`
 	AuthorityId string `json:"authorityId" gorm:"default:888"`
+	ScanID      string `json:"scanID"  gorm:"column:scan_id;comment:'扫描码'"`
 }
 
 // User login structure

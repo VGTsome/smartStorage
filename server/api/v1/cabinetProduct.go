@@ -8,6 +8,7 @@ import (
 	"gin-vue-admin/model/request"
 	resp "gin-vue-admin/model/response"
 	"gin-vue-admin/service"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -28,6 +29,29 @@ func CreateCabinetProduct(c *gin.Context) {
 		response.FailWithMessage(fmt.Sprintf("创建失败，%v", err), c)
 	} else {
 		response.OkWithMessage("创建成功", c)
+	}
+}
+func UpdateShelf(c *gin.Context) {
+	var she model.Shelf
+	_ = c.ShouldBindJSON(&she)
+	if she.ShelfID != "0" {
+		shelfNum, _ := strconv.Atoi(she.ShelfID)
+		comlogic.UpdateAllProd("01", shelfNum)
+		response.OkWithMessage("更新成功", c)
+	} else {
+		response.FailWithMessage(fmt.Sprintf("更新失败"), c)
+	}
+
+}
+func PrepareShelf(c *gin.Context) {
+	var she model.Shelf
+	_ = c.ShouldBindJSON(&she)
+	if she.ShelfID != "0" {
+		shelfNum, _ := strconv.Atoi(she.ShelfID)
+		comlogic.UpdateAllProd("00", shelfNum)
+		response.OkWithMessage("更新成功", c)
+	} else {
+		response.FailWithMessage(fmt.Sprintf("更新失败"), c)
 	}
 }
 
@@ -94,10 +118,26 @@ func UpdateCabinetProduct(c *gin.Context) {
 					service.SetSystemStatus(2)
 				}
 				comlogic.SetZero(ssc.CabinetName)
+				response.OkWithMessage("更新成功", c)
+				return
 			} else {
 				response.FailWithMessage(fmt.Sprintf("更新失败，%v", "有用户在取货"), c)
+				return
 			}
 
+		} else if sscp.ProductNumber == 1000 {
+			systemStatus := service.GetSystemStatus()
+			if systemStatus < 3 {
+				if systemStatus == 1 {
+					service.SetSystemStatus(2)
+				}
+				comlogic.Set1000(ssc.CabinetName)
+				response.OkWithMessage("更新成功", c)
+				return
+			} else {
+				response.FailWithMessage(fmt.Sprintf("更新失败，%v", "有用户在取货"), c)
+				return
+			}
 		} else if sscp.ProductNumber > 0 {
 			//初始化
 			systemStatus := service.GetSystemStatus()
@@ -106,8 +146,11 @@ func UpdateCabinetProduct(c *gin.Context) {
 					service.SetSystemStatus(2)
 				}
 				comlogic.InitProduct(ssc.CabinetName, sscp.ProductNumber)
+				response.OkWithMessage("更新成功", c)
+				return
 			} else {
 				response.FailWithMessage(fmt.Sprintf("更新失败，%v", "有用户在取货"), c)
+				return
 			}
 		}
 	}
@@ -151,19 +194,19 @@ func GetCabinetProductList(c *gin.Context) {
 	var pageInfo request.CabinetProductSearch
 	_ = c.ShouldBindQuery(&pageInfo)
 
-	//更新数量和单位重量
-	if pageInfo.PageSize == 919 {
-		//发送预备动作
-		comlogic.UpdateAllProd("00", pageInfo.Page)
-		pageInfo.PageSize = 10
-		pageInfo.Page = 1
-	}
-	if pageInfo.PageSize == 999 {
-		//更新货架
-		comlogic.UpdateAllProd("01", pageInfo.Page)
-		pageInfo.PageSize = 10
-		pageInfo.Page = 1
-	}
+	// //更新数量和单位重量
+	// if pageInfo.PageSize == 919 {
+	// 	//发送预备动作
+	// 	comlogic.UpdateAllProd("00", pageInfo.Page)
+	// 	pageInfo.PageSize = 10
+	// 	pageInfo.Page = 1
+	// }
+	// if pageInfo.PageSize == 999 {
+	// 	//更新货架
+	// 	comlogic.UpdateAllProd("01", pageInfo.Page)
+	// 	pageInfo.PageSize = 10
+	// 	pageInfo.Page = 1
+	// }
 
 	err, list, total := service.GetCabinetProductInfoList(pageInfo)
 	if err != nil {

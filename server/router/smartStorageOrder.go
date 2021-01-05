@@ -17,6 +17,7 @@ func InitSmartStorageOrderRouter(Router *gin.RouterGroup) {
 		SmartStorageOrderRouter.GET("findSmartStorageOrder", v1.FindSmartStorageOrder)                  // 根据ID获取SmartStorageOrder
 		SmartStorageOrderRouter.GET("GetSmartStorageOrderInfoById", v1.GetSmartStorageOrderInfoById)    // 获取SmartStorageOrder列表
 		SmartStorageOrderRouter.GET("getAllOrderList", v1.GetAllOrderList)
+		SmartStorageOrderRouter.GET("getMyOrderList", v1.GetMyOrderList)
 		SmartStorageOrderRouter.PUT("updateSmartStorageOrderStatus", v1.UpdateSmartStorageOrderStatus) // 获取SmartStorageOrder列表
 	}
 }

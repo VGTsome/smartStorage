@@ -2,6 +2,7 @@ package global
 
 import (
 	"gin-vue-admin/config"
+	"net"
 
 	"github.com/go-redis/redis"
 	"github.com/jinzhu/gorm"
@@ -15,4 +16,7 @@ var (
 	GVA_CONFIG config.Server
 	GVA_VP     *viper.Viper
 	GVA_LOG    *oplogging.Logger
+	GVA_TCP    *net.Conn
+	// GVA_TCP    *tcpx.
+
 )

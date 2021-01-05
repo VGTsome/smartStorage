@@ -17,9 +17,13 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="uuid"
-                       min-width="250"
-                       prop="uuid"></el-table-column>
+      <el-table-column label="ID"
+                       min-width="40"
+                       prop="ID"></el-table-column>
+      <el-table-column label="门禁ID"
+                       min-width="80"
+                       prop="scanID"></el-table-column>
+
       <el-table-column label="用户名"
                        min-width="150"
                        prop="userName"></el-table-column>
@@ -39,7 +43,12 @@
       </el-table-column>
       <el-table-column label="操作"
                        min-width="150">
+
         <template slot-scope="scope">
+          <el-button type="primary"
+                     size="small"
+                     @click="updateUser(scope.row)"
+                     slot="reference">修改</el-button>
           <el-popover placement="top"
                       width="160"
                       v-model="scope.row.visible">
@@ -71,14 +80,14 @@
 
     <el-dialog :visible.sync="addUserDialog"
                custom-class="user-dialog"
-               title="新增用户">
+               :title="diaTitle">
       <el-form :rules="rules"
                ref="userForm"
                :model="userInfo">
         <el-form-item label="用户名"
                       label-width="80px"
-                      prop="username">
-          <el-input v-model="userInfo.username"></el-input>
+                      prop="userName">
+          <el-input v-model="userInfo.userName"></el-input>
         </el-form-item>
         <el-form-item label="密码"
                       label-width="80px"
@@ -115,11 +124,58 @@
                        :props="{ checkStrictly: true,label:'authorityName',value:'authorityId',disabled:'disabled',emitPath:false}"
                        filterable></el-cascader>
         </el-form-item>
+        <el-form-item label="门禁ID"
+                      label-width="80px"
+                      prop="scanID">
+          <el-input v-model="userInfo.scanID"></el-input>
+        </el-form-item>
       </el-form>
       <div class="dialog-footer"
            slot="footer">
         <el-button @click="closeAddUserDialog">取 消</el-button>
         <el-button @click="enterAddUserDialog"
+                   type="primary">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog :visible.sync="updateUserDialog"
+               custom-class="user-dialog"
+               title="更新用户">
+      <el-form ref="updateUserForm"
+               :model="updateUserInfo">
+        <el-form-item label="ID"
+                      label-width="80px"
+                      prop="ID"
+                      v-if="false">
+          <el-input v-model="updateUserInfo.ID"></el-input>
+        </el-form-item>
+
+        <el-form-item label="用户名"
+                      label-width="80px"
+                      prop="userName">
+          <el-input v-model="updateUserInfo.userName"></el-input>
+
+        </el-form-item>
+        <el-form-item label="密码"
+                      label-width="80px"
+                      prop="password">
+          <el-input v-model="updateUserInfo.password"></el-input>
+        </el-form-item>
+        <el-form-item label="别名"
+                      label-width="80px"
+                      prop="nickName">
+          <el-input v-model="updateUserInfo.nickName"></el-input>
+        </el-form-item>
+        <el-form-item label="门禁ID"
+                      label-width="80px"
+                      prop="scanID">
+          <el-input v-model="updateUserInfo.scanID"></el-input>
+        </el-form-item>
+
+      </el-form>
+      <div class="dialog-footer"
+           slot="footer">
+        <el-button @click="closeUpdateUserDialog">取 消</el-button>
+        <el-button @click="enterUpdateUserDialog"
                    type="primary">确 定</el-button>
       </div>
     </el-dialog>
@@ -130,7 +186,13 @@
 <script>
 // 获取列表内容封装在mixins内部  getTableData方法 初始化已封装完成
 const path = process.env.VUE_APP_BASE_API
-import { getUserList, setUserAuthority, register, deleteUser } from '@/api/user'
+import {
+  getUserList,
+  setUserAuthority,
+  register,
+  deleteUser,
+  updateUser,
+} from '@/api/user'
 import { getAuthorityList } from '@/api/authority'
 import infoList from '@/components/mixins/infoList'
 import { mapGetters } from 'vuex'
@@ -139,19 +201,30 @@ export default {
   mixins: [infoList],
   data() {
     return {
+      diaTitle: '新增用户',
       listApi: getUserList,
       path: path,
       authOptions: [],
       addUserDialog: false,
+      updateUserDialog: false,
       userInfo: {
-        username: '',
+        userName: '',
         password: '',
         nickName: '',
         headerImg: '',
         authorityId: '',
+        scanID: '',
+      },
+      updateUserInfo: {
+        userName: '',
+        password: '',
+        nickName: '',
+        headerImg: '',
+        authorityId: '',
+        scanID: '',
       },
       rules: {
-        username: [
+        userName: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
         ],
         password: [
@@ -201,12 +274,19 @@ export default {
         row.visible = false
       }
     },
+    async updateUser(row) {
+      this.updateUserInfo = row
+      this.updateUserDialog = true
+    },
     async enterAddUserDialog() {
       this.$refs.userForm.validate(async (valid) => {
         if (valid) {
           const res = await register(this.userInfo)
           if (res.code == 0) {
             this.$message({ type: 'success', message: '创建成功' })
+          }
+          if (res.code == 7) {
+            await this.getTableData()
           }
           await this.getTableData()
           this.closeAddUserDialog()
@@ -217,10 +297,31 @@ export default {
       this.$refs.userForm.resetFields()
       this.addUserDialog = false
     },
+    async enterUpdateUserDialog() {
+      const res = await updateUser(this.updateUserInfo)
+      if (res.code == 0) {
+        this.$message({ type: 'success', message: '修改成功' })
+      }
+      await this.getTableData()
+      this.closeUpdateUserDialog()
+    },
+    closeUpdateUserDialog() {
+      this.updateUserDialog = false
+      this.getTableData()
+    },
     handleAvatarSuccess(res) {
       this.userInfo.headerImg = res.data.file.url
     },
     addUser() {
+      this.userInfo = {
+        userName: '',
+        password: '',
+        nickName: '',
+        headerImg: '',
+        authorityId: '',
+        scanID: '',
+      }
+      this.diaTitle = '新增用户'
       this.addUserDialog = true
     },
     async changeAuthority(row) {

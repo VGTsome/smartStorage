@@ -64,12 +64,12 @@ func upSetSingWeight(com string, command []string) {
 		return
 	}
 	shelf, box := getCabinetAttr(command)
-	_, sscp := service.GetCabinetProductByCabinetName(com + "-" + shelf + "-" + box)
-	_, ssp := service.GetSmartStorageProductByProductId(sscp.ProductId)
+	// _, sscp := service.GetCabinetProductByCabinetName(com + "-" + shelf + "-" + box)
+	// _, ssp := service.GetSmartStorageProductByProductId(sscp.ProductId)
 
-	if ssp.ProductWeight == hexstringToNumber(command[10]+command[9]+command[8]+command[7]) && ssp.PackageWeight == hexstringToNumber(command[14]+command[13]+command[12]+command[11]) {
-		SetLight(com+"-"+shelf+"-"+box, "32")
-	}
+	// if ssp.ProductWeight == hexstringToNumber(command[10]+command[9]+command[8]+command[7]) && ssp.PackageWeight == hexstringToNumber(command[14]+command[13]+command[12]+command[11]) {
+	SetLight(com+"-"+shelf+"-"+box, "32")
+	// }
 	//ssp.ProductNumber = hexstringToNumber(command[10] + command[11])
 
 }
@@ -101,7 +101,7 @@ func upUpdateCabinetProduct(com string, command []string) {
 //检验盘货步骤1发送结果 保留位02
 func updatePassWeightCurrentOrder(com string, command []string) {
 	status := getCmdStatus(command)
-	if status != "5a" {
+	if status != "5a" && status != "31" {
 		return
 	}
 	shelf, _ := getCabinetAttr(command)
@@ -113,9 +113,9 @@ func updatePassWeightCurrentOrder(com string, command []string) {
 	_, _, total := service.GetSmartStoragePassWeightStatusList(0)
 	if total == 0 {
 		setCurrentOrderLight("32")
-		openDoor()
+		openDoor(0)
 		time.Sleep(time.Second * 5)
-		closeDoor()
+		closeDoor(0)
 		service.SetSystemStatus(2)
 	}
 }
@@ -139,7 +139,19 @@ func getBoxNumFromCommand(boxNumStr string, command []string) (proNum int) {
 
 //checkPassWeight 用户出门检查货物数量
 func checkPassWeight(com string, command []string) {
+	status := getCmdStatus(command)
 	shelf, _ := getCabinetAttr(command)
+	shelfNum, _ := strconv.Atoi(shelf)
+	if status == "30" {
+		UpdateAllProd("04", shelfNum)
+		return
+	} else if status == "35" {
+		UpdateAllProd("04", shelfNum)
+		return
+	} else if status != "5a" {
+		return
+	}
+
 	_, sspws, _ := service.GetSmartStoragePassWeightListByShelf(com, shelf)
 
 	for _, sspw := range sspws {
@@ -173,20 +185,23 @@ func checkPassWeight(com string, command []string) {
 			}
 		}
 		canPass := true
+		Comments := ""
 		for key, value := range productNew {
-			if value != productOld[key] {
-				_, sso := service.GetSmartStorageOrderByOrderIDProductId(sspws[0].OrderId, key)
-				if sso.OrderNumber+value != productOld[key] {
-					canPass = false
-					break
-				}
 
+			_, sso := service.GetSmartStorageOrderByOrderIDProductId(sspws[0].OrderId, key)
+
+			if sso.OrderNumber+value != productOld[key] {
+				_, ssp := service.GetSmartStorageProductByProductId(key)
+				Comments += ssp.ProductName + " 数量异常\r\n"
+				canPass = false
 			}
+
 		}
 		if canPass {
-
-			openDoor()
-			closeDoor()
+			service.SetSystemComments(Comments)
+			openDoor(0)
+			time.Sleep(time.Second * 5)
+			closeDoor(0)
 			updateStorageByPassWeight(sspws)
 			updateOrderStatusByOrderId(sspws[0].OrderId)
 			setCurrentOrderLight("30")
@@ -194,6 +209,8 @@ func checkPassWeight(com string, command []string) {
 			service.TruncateSmartStoragePassWeight()
 			service.SetSystemStatus(1)
 		} else {
+			service.SetSystemComments(Comments)
+			UpdateAllProd("04", shelfNum)
 			//allShelfSendInit()
 		}
 
@@ -211,7 +228,7 @@ func updateStorageByPassWeight(sspws []model.SmartStoragePassWeight) {
 }
 
 func updateOrderStatusByOrderId(orderId string) {
-	_, ssos := service.GetSmartStorageOrderByOrderID(orderId)
+	_, ssos := service.GetSmartStoragesOrderByOrderID(orderId)
 	for _, sso := range ssos {
 		sso.OrderStatus = 10
 		service.UpdateSmartStorageOrder(&sso)

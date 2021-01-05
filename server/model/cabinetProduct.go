@@ -16,6 +16,11 @@ type CabinetProduct struct {
 	ProductNumber       int                 `json:"productNumber" form:"productNumber" gorm:"column:product_number;comment:'';type:int(11)"`
 }
 
+type Shelf struct {
+	ShelfID string `json:"shelfID" form:"shelfID" "`
+	Action  int    `json:"action" form:"action" "`
+}
+
 func (CabinetProduct) TableName() string {
 	return "smart_storage_cabinet_product"
 }

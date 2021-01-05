@@ -85,6 +85,7 @@ func DeleteSmartStorageOrderByIds(c *gin.Context) {
 func UpdateSmartStorageOrder(c *gin.Context) {
 	var smartStorageOrder model.SmartStorageOrder
 	_ = c.ShouldBindJSON(&smartStorageOrder)
+
 	err := service.UpdateSmartStorageOrder(&smartStorageOrder)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("更新失败，%v", err), c)
@@ -96,7 +97,16 @@ func UpdateSmartStorageOrder(c *gin.Context) {
 func UpdateSmartStorageOrderStatus(c *gin.Context) {
 	var smartStorageOrder model.SmartStorageOrder
 	_ = c.ShouldBindJSON(&smartStorageOrder)
-	err := service.UpdateSmartStorageOrderStatus(&smartStorageOrder)
+	if smartStorageOrder.OrderStatus == 999 {
+		_, ssos := service.GetSmartStoragesOrderByOrderID(smartStorageOrder.OrderId)
+		for _, sso := range ssos {
+			sso.OrderStatus = 0
+			service.UpdateSmartStorageOrder(&sso)
+			response.OkWithMessage("更新成功", c)
+			return
+		}
+	}
+	err := service.UpdateSmartStorageOrder(&smartStorageOrder)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("更新失败，%v", err), c)
 	} else {
@@ -152,6 +162,22 @@ func GetAllOrderList(c *gin.Context) {
 	var pageInfo request.SmartStorageOrderSearch
 	_ = c.ShouldBindQuery(&pageInfo)
 	err, list, total := service.GetAllOrderList(pageInfo)
+	if err != nil {
+		response.FailWithMessage(fmt.Sprintf("获取数据失败，%v", err), c)
+	} else {
+		response.OkWithData(resp.PageResult{
+			List:     list,
+			Total:    total,
+			Page:     pageInfo.Page,
+			PageSize: pageInfo.PageSize,
+		}, c)
+	}
+}
+func GetMyOrderList(c *gin.Context) {
+	var pageInfo request.SmartStorageOrderSearch
+	userId, _ := strconv.Atoi(c.Request.Header.Get("x-user-id"))
+	_ = c.ShouldBindQuery(&pageInfo)
+	err, list, total := service.GetMyOrderList(pageInfo,userId)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取数据失败，%v", err), c)
 	} else {

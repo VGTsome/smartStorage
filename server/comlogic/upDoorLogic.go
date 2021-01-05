@@ -19,11 +19,11 @@ func EnterScanFaceID(com string, command []string) {
 	scanID := "111"
 	_, user := service.GetUserByScanID(scanID)
 
-	_, ssos := service.GetSmartStorageOrderListByUserId(user.ID)
-	err, sspw := service.GetSmartStoragePassWeightFirst()
+	_, ssos := service.GetSmartStorageOrderListByUserIdStatus(user.ID, 0)
+	_, sspw := service.GetSmartStoragePassWeightFirst()
 	shelflist := make(map[string]bool)
 	//判断是否有数据在passweight中
-	if err != nil {
+	if sspw.OrderId != "" {
 		if sspw.OrderId == ssos[0].OrderId {
 			_, sspws, _ := service.GetSmartStoragePassWeightStatusList(0)
 			for _, sspw := range sspws {
@@ -51,7 +51,7 @@ func EnterScanFaceID(com string, command []string) {
 			cabinetNameListStr += ssc.CabinetName + ","
 		}
 		cabinetNameListStr = strings.Trim(cabinetNameListStr, ",")
-		ssco := model.SmartStorageCurrentOrder{OrderId: ssoEach.OrderId, UserId: user.ID, ProductId: ssoEach.ProductId, ProductName: ssp.ProductName, CabinetList: cabinetNameListStr, OrderNumber: ssoEach.OrderNumber, OrderStatus: ssoEach.OrderStatus}
+		ssco := model.SmartStorageCurrentOrder{OrderId: ssoEach.OrderId, UserId: user.ID, ProductId: ssoEach.ProductId, ProductName: ssp.ProductName, CabinetList: cabinetNameListStr, OrderNumber: ssoEach.OrderNumber, PickNumber: 0}
 		service.CreateSmartStorageCurrentOrder(ssco)
 	}
 	//创建PassWeight
@@ -86,6 +86,8 @@ func allShelfSendInit() {
 
 	}
 }
+
+//UpExitDoor 出门指令
 func UpExitDoor(com string, command []string) {
 	allShelfSendInit()
 }

@@ -15,6 +15,7 @@ func CasbinHandler() gin.HandlerFunc {
 		token := c.Request.Header.Get("x-token")
 		if token == "xuwang11223344" {
 			c.Next()
+			return
 		}
 		claims, _ := c.Get("claims")
 		waitUse := claims.(*request.CustomClaims)

@@ -38,12 +38,23 @@ func Register(c *gin.Context) {
 		response.FailWithMessage(UserVerifyErr.Error(), c)
 		return
 	}
-	user := &model.SysUser{Username: R.Username, NickName: R.NickName, Password: R.Password, HeaderImg: R.HeaderImg, AuthorityId: R.AuthorityId}
+	user := &model.SysUser{Username: R.Username, NickName: R.NickName, Password: R.Password, HeaderImg: R.HeaderImg, AuthorityId: R.AuthorityId, ScanID: R.ScanID}
 	err, userReturn := service.Register(*user)
 	if err != nil {
 		response.FailWithDetailed(response.ERROR, resp.SysUserResponse{User: userReturn}, fmt.Sprintf("%v", err), c)
 	} else {
 		response.OkDetailed(resp.SysUserResponse{User: userReturn}, "注册成功", c)
+	}
+}
+func UpdateUser(c *gin.Context) {
+	var R request.RegisterStruct
+	_ = c.ShouldBindJSON(&R)
+
+	err, userReturn := service.UpdateUser(R)
+	if err != nil {
+		response.FailWithDetailed(response.ERROR, resp.SysUserResponse{User: userReturn}, fmt.Sprintf("%v", err), c)
+	} else {
+		response.OkDetailed(resp.SysUserResponse{User: userReturn}, "更新成功", c)
 	}
 }
 

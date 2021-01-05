@@ -102,6 +102,13 @@ export const getAllOrderList = (params) => {
 		params,
 	})
 }
+export const getMyOrderList = (params) => {
+	return service({
+		url: '/smartStorageOrder/getMyOrderList',
+		method: 'get',
+		params,
+	})
+}
 export const updateSmartStorageOrderStatus = (data) => {
 	return service({
 		url: '/smartStorageOrder/updateSmartStorageOrderStatus',

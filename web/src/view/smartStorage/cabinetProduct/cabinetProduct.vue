@@ -33,15 +33,17 @@
         </el-form-item>
         <el-form-item>
           选择更新货柜
-          <el-select v-model="page"
+          <el-select v-model="shelf.shelfID"
                      placeholder="选择更新货柜号">
-            <el-option value="1"></el-option>
-            <el-option value="2"></el-option>
+            <el-option value=1></el-option>
+            <el-option value=2></el-option>
+            <el-option value=3></el-option>
+            <el-option value=4></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
           <el-button @click="updatePrepare"
-                     type="primary">全部更新预备</el-button>
+                     type="primary">全部预备更新</el-button>
         </el-form-item>
         <el-form-item>
           <el-button @click="updateAll"
@@ -77,7 +79,7 @@
                        prop="SmartStorageProduct.productName"
                        width="120"></el-table-column>
 
-      <el-table-column label="总重量(千克)"
+      <el-table-column label="单个重量(g)"
                        prop="weight"
                        width="120"></el-table-column>
       <el-table-column label="总数量"
@@ -153,10 +155,10 @@
                        :disabled="item.disabled"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="总重量(kg)"
+        <el-form-item label="单个重量(g)"
                       prop="weight">
           <el-input-number v-model="formData.weight"
-                           placeholder="总重量(kg)"
+                           placeholder="单个重量(g)"
                            disabled="1"
                            :min="0"
                            :precision='3'></el-input-number>
@@ -188,6 +190,8 @@ import {
   updateCabinetProduct,
   findCabinetProduct,
   getCabinetProductList,
+  prepareShelf,
+  updateShelf,
 } from '@/api/cabinetProduct' //  此处请自行替换地址
 import { formatTimeToStr } from '@/utils/data'
 import infoList from '@/components/mixins/infoList'
@@ -209,6 +213,10 @@ export default {
         weight: null,
         productNumber: null,
       },
+      shelf: {
+        shelfID: 1,
+        action: 1,
+      },
       rules: {
         cabinetId: [
           {
@@ -227,7 +235,7 @@ export default {
         weight: [
           {
             required: true,
-            message: '总重量(kg)',
+            message: '单个重量(g)',
             trigger: 'blur',
           },
         ],
@@ -261,14 +269,14 @@ export default {
       this.getTableData()
     },
     updateAll() {
-      this.page = 1
-      this.pageSize = 999
-      this.getTableData()
+      //this.page = 1
+      this.shelf.action = 2
+      this.updateShelf(this.shelf)
     },
     updatePrepare() {
-      this.page = 1
-      this.pageSize = 919
-      this.getTableData()
+      //this.page = 1
+      this.shelf.action = 1
+      this.prepareShelf(this.shelf)
     },
     handleSelectionChange(val) {
       this.multipleSelection = val
@@ -316,8 +324,25 @@ export default {
         this.getTableData()
       }
     },
+    async prepareShelf(data) {
+      const res = await prepareShelf(data)
+      if (res.code == 0) {
+        this.$message({
+          type: 'success',
+          message: '准备成功',
+        })
+      }
+    },
+    async updateShelf(data) {
+      const res = await updateShelf(data)
+      if (res.code == 0) {
+        this.$message({
+          type: 'success',
+          message: '更新成功',
+        })
+      }
+    },
     async enterDialog() {
-      debugger
       let valid2
       await this.$refs['elForm'].validate((valid) => {
         valid2 = valid
