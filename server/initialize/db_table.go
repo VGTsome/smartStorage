@@ -33,6 +33,7 @@ func DBTables() {
 		model.SmartStorageCurrentOrder{},
 		model.SmartStorageSystemStatus{},
 		model.SmartStorageComLog{},
+		model.HkScan{},
 	)
 	global.GVA_LOG.Debug("register table success")
 }

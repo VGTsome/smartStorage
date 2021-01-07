@@ -52,6 +52,7 @@ func Routers() *gin.Engine {
 	router.InitSmartStorageCurrentOrderRouter(ApiGroup) //用户查看当前订单入口
 	router.InitSmartStorageSystemStatusRouter(ApiGroup) //系统状态
 	router.InitSmartStorageComLogRouter(ApiGroup)       //com记录
+	router.InitHkScanRouter(ApiGroup)                   //海康
 	global.GVA_LOG.Info("router register success")
 	return Router
 }
