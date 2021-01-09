@@ -147,3 +147,20 @@ func GetSmartStorageProductValidList(c *gin.Context) {
 		}, c)
 	}
 }
+
+func GetLowNumberProductList(c *gin.Context) {
+	var pageInfo request.CabinetProductSearch
+
+	_ = c.ShouldBindQuery(&pageInfo)
+	err, list, total := service.GetCabinetProductInfoListLowNumber(pageInfo)
+	if err != nil {
+		response.FailWithMessage(fmt.Sprintf("获取数据失败，%v", err), c)
+	} else {
+		response.OkWithData(resp.PageResult{
+			List:     list,
+			Total:    total,
+			Page:     pageInfo.Page,
+			PageSize: pageInfo.PageSize,
+		}, c)
+	}
+}

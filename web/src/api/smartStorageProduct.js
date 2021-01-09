@@ -103,3 +103,10 @@ export const getSmartStorageProductValidList = (params) => {
 		params,
 	})
 }
+export const getLowNumberProductList = (params) => {
+	return service({
+		url: '/smartStorageProduct/getLowNumberProductList',
+		method: 'get',
+		params,
+	})
+}

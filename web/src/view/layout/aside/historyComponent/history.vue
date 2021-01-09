@@ -49,7 +49,7 @@ export default {
       {
         name: 'dashboard',
         meta: {
-          title: '预定货物',
+          title: '我的订单',
         },
       },
     ]
@@ -88,7 +88,7 @@ export default {
         {
           name: 'dashboard',
           meta: {
-            title: '预定货物',
+            title: '我的订单',
           },
         },
       ]

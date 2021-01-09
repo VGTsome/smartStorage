@@ -2,11 +2,13 @@ package v1
 
 import (
 	"fmt"
+	"gin-vue-admin/comlogic"
 	"gin-vue-admin/global/response"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/request"
 	resp "gin-vue-admin/model/response"
 	"gin-vue-admin/service"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,6 +23,9 @@ import (
 func CreateHkScan(c *gin.Context) {
 	var hkScan model.HkScan
 	_ = c.ShouldBindJSON(&hkScan)
+	if hkScan.ScanStatus == "MINOR_FACE_VERIFY_PASS" {
+		comlogic.EnterScanFaceID(hkScan.ScanId)
+	}
 	err := service.CreateHkScan(hkScan)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("创建失败，%v", err), c)
@@ -58,7 +63,7 @@ func DeleteHkScan(c *gin.Context) {
 // @Router /hkScan/deleteHkScanByIds [delete]
 func DeleteHkScanByIds(c *gin.Context) {
 	var IDS request.IdsReq
-    _ = c.ShouldBindJSON(&IDS)
+	_ = c.ShouldBindJSON(&IDS)
 	err := service.DeleteHkScanByIds(IDS)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("删除失败，%v", err), c)

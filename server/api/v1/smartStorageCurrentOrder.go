@@ -225,14 +225,14 @@ func FindSmartStorageCurrentOrder(c *gin.Context) {
 func GetSmartStorageCurrentOrderList(c *gin.Context) {
 	var pageInfo request.SmartStorageCurrentOrderSearch
 	_ = c.ShouldBindQuery(&pageInfo)
-	cs := []string{"02", "03"}
+
 	if pageInfo.PageSize == 999 {
 		pageInfo.PageSize = 10
-		comlogic.UpExitDoor("COM1", cs)
+		comlogic.UpExitDoor()
 	}
 	if pageInfo.PageSize == 99 {
 		pageInfo.PageSize = 10
-		comlogic.EnterScanFaceID("COM1", cs)
+		comlogic.EnterScanFaceID("1")
 	}
 	err, list, total := service.GetSmartStorageCurrentOrderInfoList(pageInfo)
 

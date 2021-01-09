@@ -8,7 +8,7 @@ import (
 )
 
 //EnterScanFaceID 进门扫脸
-func EnterScanFaceID(com string, command []string) {
+func EnterScanFaceID(scanID string) {
 	if service.GetSystemStatus() != 1 {
 		return
 	}
@@ -16,7 +16,7 @@ func EnterScanFaceID(com string, command []string) {
 	if total > 0 {
 		return
 	}
-	scanID := "111"
+
 	_, user := service.GetUserByScanID(scanID)
 
 	_, ssos := service.GetSmartStorageOrderListByUserIdStatus(user.ID, 0)
@@ -88,6 +88,6 @@ func allShelfSendInit() {
 }
 
 //UpExitDoor 出门指令
-func UpExitDoor(com string, command []string) {
+func UpExitDoor() {
 	allShelfSendInit()
 }

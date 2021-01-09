@@ -17,5 +17,6 @@ func InitSmartStorageProductRouter(Router *gin.RouterGroup) {
 		SmartStorageProductRouter.GET("findSmartStorageProduct", v1.FindSmartStorageProduct)                  // 根据ID获取SmartStorageProduct
 		SmartStorageProductRouter.GET("getSmartStorageProductList", v1.GetSmartStorageProductList)            // 获取SmartStorageProduct列表
 		SmartStorageProductRouter.GET("getSmartStorageProductValidList", v1.GetSmartStorageProductValidList)  // 获取可用SmartStorageProduct列表
+		SmartStorageProductRouter.GET("getLowNumberProductList", v1.GetLowNumberProductList)
 	}
 }
